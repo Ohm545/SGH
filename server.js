@@ -65,7 +65,7 @@ app.post("/get-otp", async (req, res) => {
                 service: "gmail",
                 auth: {
                     user: "ohmpatel655@gmail.com",
-                    pass: "grur ikqy tfpy ahks", 
+                    pass: process.env.GG_PASS, 
                 },
             });
 

@@ -24,7 +24,7 @@
 
         /* Navigation - Modified */
         .navbar {
-            background: #1a365d;
+            background:rgb(48, 104, 179);
             padding: 0 1.5rem;
             position: fixed;
             width: 100%;
@@ -178,37 +178,33 @@
 
         /* Buttons */
         .cta-buttons {
-    display: flex; /* Arrange buttons in a row */
-    justify-content: center; /* Center buttons horizontally */
-    gap: 1.5rem; /* Add spacing between buttons */
-    margin-top: 2rem;
-}
+            margin-top: 2rem;
+        }
 
-.cta-btn {
-    padding: 1rem 2rem;
-    border: none;
-    border-radius: 5px;
-    font-size: 1.1rem;
-    cursor: pointer;
-    transition: transform 0.3s, box-shadow 0.3s;
-    flex: 1; /* Allow buttons to grow equally */
-    max-width: 200px; /* Set a max-width for better appearance */
-}
+        .cta-btn {
+            padding: 1rem 2rem;
+            margin: 0 1rem;
+            border: none;
+            border-radius: 5px;
+            font-size: 1.1rem;
+            cursor: pointer;
+            transition: transform 0.3s, box-shadow 0.3s;
+        }
 
-.citizen-btn {
-    background: #2dccbc;
-    color: #1a365d;
-}
+        .citizen-btn {
+            background: #2dccbc;
+            color: #1a365d;
+        }
 
-.official-btn {
-    background: #edf4fb;
-    color: #1a365d;
-}
+        .official-btn {
+            background: #edf4fb;
+            color: #1a365d;
+        }
 
-.cta-btn:hover {
-    transform: translateY(-3px);
-    box-shadow: 0 5px 15px rgba(0,0,0,0.3);
-}
+        .cta-btn:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 5px 15px rgba(0,0,0,0.3);
+        }
 
         /* Sections */
         .section {
@@ -265,7 +261,9 @@
             box-shadow: 0 5px 15px rgba(0,0,0,0.1);
             transition: all 0.3s;
         }
-
+        .benefit-box ul{
+            list-style-type: none;
+        }
         .benefit-box:hover {
             transform: translateY(-5px);
             box-shadow: 0 8px 20px rgba(0,0,0,0.15);
@@ -291,7 +289,7 @@
         .about-content {
             max-width: 800px;
             margin: 0 auto;
-            background: rgba(255,255,255,0.1);
+            background: rgba(227, 234, 234, 0.1);
             padding: 2rem;
             border-radius: 10px;
             backdrop-filter: blur(5px);
@@ -306,7 +304,7 @@
 
         /* Footer */
         footer {
-            background: #1a365d;
+            background: rgb(48, 104, 179);
             color: white;
             padding: 4rem 2rem;
             margin-top: 4rem;
@@ -319,7 +317,18 @@
             grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
             gap: 2rem;
         }
-
+        .footer-content > div {
+            display: flex;
+            flex-direction: column; /* Keeps text in a vertical stack */
+            align-items: center; /* Horizontal center */
+            justify-content: center; /* Vertical center */
+            /* text-align: center; Optional: centers text */
+            height: 100%; /* Ensures full height in the grid */
+        }
+        .footer-content ul{
+            list-style-type: none;
+            margin-left: -32px;
+        }
         .footer-section h3 {
             margin-bottom: 1rem;
             color: #4fd1c5;
@@ -351,12 +360,16 @@
     </style>
 </head>
 <body>
+    <!-- Navigation with New Logo -->
     <nav class="navbar">
         <a href="#" class="logo-container">
             <svg class="logo-svg" viewBox="0 0 64 64">
                 <g class="megaphone-logo">
+                    <!-- Megaphone body (teal) -->
                     <path d="M52 28L32 8 12 28v24h40V28z" fill="#1a365d" stroke="#4fd1c5"/>
+                    <!-- Sound waves (teal) -->
                     <path d="M52 36c4 0 8-4 8-8s-4-8-8-8M52 44c7 0 12-5 12-12s-5-12-12-12" stroke="#4fd1c5"/>
+                    <!-- Document lines (white) -->
                     <path d="M16 36h12M16 42h12M16 48h12" stroke="#fff"/>
                 </g>
             </svg>
@@ -380,15 +393,11 @@
     <!-- Hero Section -->
     <section class="hero">
         <div class="hero-content">
-            <h1>Empowering Citizens, Enhancing Governance</h1>
+            <h1>Empowering citizens, improving governance</h1>
             <p>Seamlessly connect with government officials, track complaint status, and contribute to a transparent system</p>
             <div class="cta-buttons">
-                <form action="/citizen" method="POST">
-                <button class="cta-btn citizen-btn" type="submit">Citizen Portal</button>
-                </form>
-                <form action="/official" method="POST">
-                <button class="cta-btn official-btn" type="submit">Official Portal</button>
-                </form>
+                <button class="cta-btn citizen-btn" onclick="location.href='citizen.html'">Citizen Portal</button>
+                <button class="cta-btn official-btn" onclick="location.href='official.html'">Official Portal</button>
             </div>
         </div>
     </section>
@@ -477,25 +486,25 @@
         <div class="footer-content">
             <div class="footer-section">
                 <h3>Contact Us</h3>
-                <p>📧 contact@complaintexpress.com</p>
-                <p>📞 +91-XXX-XXX-XXXX</p>
-                <p>🏢 123 Government Building, Gujarat</p>
+                <p><a href="mailto:complaintexpress@gmail.com?subject=Feedback&body=Hello!">📧 complaintexpress@gmail.com</a></p>
+                <!-- <p>📞 +91-XXX-XXX-XXXX</p> -->
+                <p><a href="https://www.ddu.ac.in/">🎓 Dharmsinh Desai University, Gujarat</a></p>
             </div>
             <div class="footer-section">
                 <h3>Quick Links</h3>
                 <ul>
                     <li><a href="#features">Features</a></li>
-                    <li><a href="./faq.html">FAQ</a></li>
-                    <li><a href="./contact.html">Team</a></li>
+                    <li><a href="faq.html">FAQ</a></li>
+                    <li><a href="contact.html">Team</a></li>
                 </ul>
             </div>
-            <div class="footer-section">
+            <!-- <div class="footer-section">
                 <h3>Legal</h3>
                 <ul>
                     <li><a href="#">Privacy Policy</a></li>
                     <li><a href="#">Terms of Service</a></li>
                 </ul>
-            </div>
+            </div> -->
         </div>
     </footer>
 
@@ -509,6 +518,17 @@
                 });
             });
         });
+
+        // Get the browser's language
+        var userLang = navigator.language || navigator.userLanguage;
+
+        // Check the language and redirect
+        if (userLang.startsWith('gu')) {
+            window.location.href = 'homepageG.html'; // Redirect to Gujarati version
+        } else {
+            window.location.href = 'homepage.html'; // Default to English
+        }
+
     </script>
 </body>
 </html>

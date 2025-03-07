@@ -3,72 +3,272 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Dashboard</title>
+    <title>Complaint Express - Dang District</title>
     <style>
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-            font-family: Arial, sans-serif;
-        }
-
-        body {
-            background: linear-gradient(to right, #2c3e50, #34495e);
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            justify-content: center;
-            height: 100vh;
-            color: white;
-        }
-
-        .dashboard-container {
-            background: rgba(255, 255, 255, 0.1);
-            padding: 30px;
-            border-radius: 10px;
-            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
-            text-align: center;
-            width: 350px;
-        }
-
-        h1 {
-            margin-bottom: 20px;
-            font-size: 24px;
-        }
-
-        .form-group {
-            margin: 15px 0;
-        }
-
-        .form-group button {
-            width: 100%;
-            padding: 12px;
-            background: #2980b9;
-            color: white;
-            border: none;
-            border-radius: 5px;
-            font-size: 16px;
-            cursor: pointer;
-            transition: 0.3s;
-        }
-
-        .form-group button:hover {
-            background: #1c638d;
-        }
+        *{box-sizing:border-box;margin:0;padding:0;}
+        body{font-family:'Segoe UI',Tahoma,Geneva,Verdana,sans-serif;background-color:#f5f6fa;}
+        .container{display:flex;gap:20px;padding:20px;flex-wrap:wrap;}
+        .nav-column{width:250px;background:#2c3e50;padding:20px;border-radius:15px;height:calc(100vh - 40px);position:sticky;top:20px;}
+        .content-area{flex:1;min-width:300px;background:white;border-radius:15px;padding:25px;box-shadow:0 2px 15px rgba(0,0,0,0.1);}
+        .nav-button{display:block;width:100%;padding:15px;margin-bottom:12px;border:none;border-radius:8px;background:#3498db;color:white;cursor:pointer;text-align:left;transition:all 0.3s ease;}
+        .nav-button:hover{background:#2980b9;transform:translateX(5px);}
+        .active-section{background:#2ecc71;}
+        .hidden{display:none;}
+        .form-group{margin-bottom:20px;}
+        label{display:block;margin-bottom:8px;color:#2c3e50;font-weight:600;}
+        input,select,textarea{width:100%;padding:12px;border:2px solid #bdc3c7;border-radius:8px;font-size:16px;}
+        .complaints-list{margin-top:30px;border-top:2px solid #ecf0f1;padding-top:20px;}
+        .complaint-item{padding:15px;background:#f8f9fa;margin-bottom:15px;border-radius:8px;border-left:4px solid #3498db;}
+        .status-badge{padding:6px 12px;border-radius:20px;font-size:0.85em;display:inline-block;margin-top:10px;}
+        .pending{background:#f1c40f;color:#2c3e50;}
+        .in-progress{background:#3498db;color:white;}
+        .resolved{background:#2ecc71;color:white;}
+        @media (max-width:768px){.container{flex-direction:column;}.nav-column{width:100%;height:auto;position:static;}.nav-button{text-align:center;}}
+        .two-col{display:grid;grid-template-columns:1fr 1fr;gap:20px;}
+        .status-section{margin-top:20px;padding:15px;background:#f8f9fa;border-radius:8px;}
+        .complaint-status-item{padding:15px;margin-bottom:15px;background:white;border-radius:8px;box-shadow:0 2px 4px rgba(0,0,0,0.05);}
     </style>
 </head>
 <body>
-    <div class="dashboard-container">
-        <h1>Dashboard</h1>
-        <form action="/register" method="POST" class="form-group">
-            <button type="submit">Register a New Complaint</button>
-        </form>
-        <form action="/view" method="POST" class="form-group">
-            <button type="submit">View a Complaint</button>
-        </form>
-        <form action="/viewdis" method="POST" class="form-group">
-            <button type="submit">District Status</button>
-        </form>
+    <div class="container">
+        <div class="content-area" id="mainContent">
+            <div id="news">
+                <h2>Latest Updates</h2>
+                <div id="newsContent">
+                    <div class="news-item">
+                        <h3>New Grievance Portal Launched in Dang</h3>
+                        <p>District administration launches new complaint resolution system...</p>
+                    </div>
+                    <div class="news-item">
+                        <h3>Improvement in Public Services</h3>
+                        <p>Municipal corporation reports 30% faster complaint resolution...</p>
+                    </div>
+                </div>
+            </div>
+
+            <div id="statistics" class="hidden">
+                <h2>Complaint Statistics</h2>
+                <div id="stats-content">
+                    <p>Total Complaints: <span id="totalComplaints">0</span></p>
+                    <p>Resolved: <span id="resolvedComplaints">0</span></p>
+                    <p>Pending: <span id="pendingComplaintsCount">0</span></p>
+                </div>
+            </div>
+
+            <div id="complaint" class="hidden">
+                <h2>File New Complaint</h2>
+                <form id="complaintForm" onsubmit="return submitComplaint(event)">
+                    <div class="two-col">
+                        <div class="form-group">
+                            <label>Full Name:</label>
+                            <input type="text" id="name" required>
+                        </div>
+                        <div class="form-group">
+                            <label>Mobile Number:</label>
+                            <input type="tel" id="mobile" pattern="[0-9]{10}" required>
+                        </div>
+                    </div>
+                    <div class="two-col">
+                        <div class="form-group">
+                            <label>Taluka:</label>
+                            <select id="taluka" required>
+                                <option value="">Select Taluka</option>
+                                <option value="Ahwa">Ahwa</option>
+                                <option value="Subir">Subir</option>
+                                <option value="Waghai">Waghai</option>
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <label>Location Type:</label>
+                            <select id="locationType" onchange="updateVillageCityOptions()" required>
+                                <option value="">Select Type</option>
+                                <option value="village">Village</option>
+                                <option value="city">City</option>
+                            </select>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label>Select Village/City:</label>
+                        <select id="villageCity" required></select>
+                    </div>
+                    <div class="form-group">
+                        <label>Complete Address:</label>
+                        <textarea id="address" rows="3" required></textarea>
+                    </div>
+                    <div class="two-col">
+                        <div class="form-group">
+                            <label>Pincode:</label>
+                            <input type="text" id="pincode" pattern="[0-9]{6}" required>
+                        </div>
+                        <div class="form-group">
+                            <label>Exact Location of the problem:</label>
+                            <!-- <select id="problemLocation" required>
+                                <option value="">Select Location Type</option>
+                                <option value="Residential Area">Residential Area</option>
+                                <option value="Public Road">Public Road</option>
+                                <option value="Government Office">Government Office</option>
+                                <option value="Market Area">Market Area</option>
+                                <option value="Other">Other</option>
+                            </select> -->
+                            <textarea id="location" rows="1" required></textarea>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label>Problem Description:</label>
+                        <textarea id="description" rows="5" required></textarea>
+                    </div>
+                    <button type="submit" class="nav-button">Submit Complaint</button>
+                </form>
+                <div class="complaints-list">
+                    <h3>Your Active Complaints</h3>
+                    <div id="pendingComplaints"></div>
+                </div>
+            </div>
+
+            <div id="status" class="hidden">
+                <h2>Your Complaint Status</h2>
+                <div id="allComplaints" class="status-section"></div>
+            </div>
+        </div>
+
+        <div class="nav-column">
+            <button class="nav-button active-section" onclick="showSection('news')">Latest News</button>
+            <button class="nav-button" onclick="showSection('statistics')">View Statistics</button>
+            <button class="nav-button" onclick="showSection('complaint')">File Complaint</button>
+            <button class="nav-button" onclick="showSection('status')">Check Status</button>
+            <button class="nav-button" onclick="showSection('profile')">Your Profile</button>
+        </div>
     </div>
+
+    <script>
+        const locations = {
+            village: ['Ahwa','Subir','Waghai','Girabhagal','Dunmal','Ambola','Kosbad',
+                     'Khermal','Khindvel','Kukdaval','Kosamdi','Khamber','Khoraj',
+                     'Kharadpada','Khodvel','Malegaon','Morkhal','Nizar','Nakhal',
+                     'Pimpri','Saputara','Shirpapur','Talni','Umarpada'],
+            city: ['Ahwa','Subir','Waghai','Dang','Saputara','Nizar','Umarpada']
+        };
+
+        document.addEventListener('DOMContentLoaded', () => {
+            if(!localStorage.getItem('complaints')) {
+                localStorage.setItem('complaints', JSON.stringify([{
+                    id: Date.now(),
+                    name: "John Doe",
+                    mobile: "1234567890",
+                    taluka: "Ahwa",
+                    locationType: "city",
+                    villageCity: "Ahwa",
+                    address: "Main Road",
+                    pincode: "394710",
+                    problemLocation: "Public Road",
+                    description: "Potholes on main road",
+                    status: "pending",
+                    date: new Date().toLocaleString()
+                }]));
+            }
+            showSection('news');
+            updatePendingComplaints();
+            updateStatistics();
+        });
+
+        function showSection(sectionId) {
+            document.querySelectorAll('.nav-button').forEach(btn => btn.classList.remove('active-section'));
+            document.querySelectorAll('#mainContent > div').forEach(div => div.classList.add('hidden'));
+            const activeBtn = document.querySelector(`button[onclick*="${sectionId}"]`);
+            if(activeBtn) activeBtn.classList.add('active-section');
+            document.getElementById(sectionId).classList.remove('hidden');
+            if(sectionId === 'status') showStatus();
+        }
+
+        function showStatus() {
+            const allComplaintsDiv = document.getElementById('allComplaints');
+            const complaints = JSON.parse(localStorage.getItem('complaints')) || [];
+            allComplaintsDiv.innerHTML = complaints.map(complaint => `
+                <div class="complaint-status-item">
+                    <h4>${complaint.taluka} - ${complaint.villageCity}</h4>
+                    <p><strong>Issue:</strong> ${complaint.description}</p>
+                    <p><strong>Filed On:</strong> ${complaint.date}</p>
+                    <p><strong>Status:</strong> <span class="status-badge ${complaint.status}">${complaint.status}</span></p>
+                    ${complaint.status === 'resolved' ? `<p><strong>Resolved On:</strong> ${complaint.resolvedDate || 'N/A'}</p>` : ''}
+                </div>
+            `).join('');
+        }
+
+        function updateVillageCityOptions() {
+            const type = document.getElementById('locationType').value;
+            const select = document.getElementById('villageCity');
+            select.innerHTML = `<option value="">Select ${type.charAt(0).toUpperCase() + type.slice(1)}</option>` + 
+                locations[type].map(loc => `<option value="${loc}">${loc}</option>`).join('');
+        }
+
+        function submitComplaint(event) {
+            event.preventDefault();
+            const complaint = {
+                id: Date.now(),
+                name: document.getElementById('name').value,
+                mobile: document.getElementById('mobile').value,
+                taluka: document.getElementById('taluka').value,
+                locationType: document.getElementById('locationType').value,
+                villageCity: document.getElementById('villageCity').value,
+                address: document.getElementById('address').value,
+                pincode: document.getElementById('pincode').value,
+                problemLocation: document.getElementById('problemLocation').value,
+                description: document.getElementById('description').value,
+                status: "pending",
+                date: new Date().toLocaleString()
+            };
+            
+            const complaints = JSON.parse(localStorage.getItem('complaints')) || [];
+            complaints.push(complaint);
+            localStorage.setItem('complaints', JSON.stringify(complaints));
+            
+            updatePendingComplaints();
+            updateStatistics();
+            event.target.reset();
+            alert('Complaint submitted successfully!');
+        }
+
+        function updatePendingComplaints() {
+            const complaints = JSON.parse(localStorage.getItem('complaints')) || [];
+            document.getElementById('pendingComplaints').innerHTML = complaints
+                .filter(c => c.status !== 'resolved')
+                .map(complaint => `
+                    <div class="complaint-item">
+                        <h4>${complaint.taluka} - ${complaint.villageCity}</h4>
+                        <p><strong>Issue:</strong> ${complaint.description.substring(0,50)}...</p>
+                        <p><strong>Status:</strong> <span class="status-badge ${complaint.status}">${complaint.status}</span></p>
+                        <p><strong>Filed:</strong> ${complaint.date}</p>
+                        <button class="nav-button" onclick="editComplaint(${complaint.id})" style="margin-top:10px;padding:8px 15px;">Edit</button>
+                    </div>
+                `).join('');
+        }
+
+        function editComplaint(id) {
+            const complaint = JSON.parse(localStorage.getItem('complaints')).find(c => c.id === id);
+            if(complaint) {
+                document.getElementById('name').value = complaint.name;
+                document.getElementById('mobile').value = complaint.mobile;
+                document.getElementById('taluka').value = complaint.taluka;
+                document.getElementById('locationType').value = complaint.locationType;
+                updateVillageCityOptions();
+                setTimeout(() => document.getElementById('villageCity').value = complaint.villageCity, 10);
+                document.getElementById('address').value = complaint.address;
+                document.getElementById('pincode').value = complaint.pincode;
+                document.getElementById('problemLocation').value = complaint.problemLocation;
+                document.getElementById('description').value = complaint.description;
+                window.scrollTo(0, document.getElementById('complaint').offsetTop);
+            }
+        }
+
+        function updateStatistics() {
+            const complaints = JSON.parse(localStorage.getItem('complaints')) || [];
+            document.getElementById('totalComplaints').textContent = complaints.length;
+            const resolved = complaints.filter(c => c.status === 'resolved').length;
+            document.getElementById('resolvedComplaints').textContent = resolved;
+            document.getElementById('pendingComplaintsCount').textContent = complaints.length - resolved;
+        }
+
+        updateVillageCityOptions();
+    </script>
 </body>
 </html>

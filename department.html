@@ -1,0 +1,93 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Government Departments</title>
+    <style>
+        body {
+            font-family: 'Poppins', sans-serif;
+            background: #e0f7ff;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            margin: 0;
+        }
+        .container {
+            background: rgba(255, 255, 255, 0.9);
+            backdrop-filter: blur(10px);
+            border-radius: 20px;
+            padding: 30px;
+            width: 400px;
+            text-align: center;
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.2);
+            color: #333;
+        }
+        h2 {
+            margin-bottom: 20px;
+            font-size: 24px;
+            color: #0056b3;
+        }
+        .checkbox-group {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 15px;
+            margin-bottom: 20px;
+        }
+        label {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            cursor: pointer;
+            color: #222;
+            font-size: 14px;
+        }
+        input[type="checkbox"] {
+            width: 18px;
+            height: 18px;
+            accent-color: #0056b3;
+        }
+        .submit-btn {
+            margin-top: 20px;
+            padding: 12px 24px;
+            border: none;
+            border-radius: 8px;
+            background: #0056b3;
+            color: white;
+            font-size: 16px;
+            cursor: pointer;
+            transition: 0.3s;
+        }
+        .submit-btn:hover {
+            background: #003f7f;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h2>Select Department(s)</h2>
+        <form>
+            <div class="checkbox-group">
+                <label><input type="checkbox"> Water Supply</label>
+                <label><input type="checkbox"> Electricity</label>
+                <label><input type="checkbox"> Roads & Highways</label>
+                <label><input type="checkbox"> Sanitation</label>
+                <label><input type="checkbox"> Health & Medical</label>
+                <label><input type="checkbox"> Education</label>
+                <label><input type="checkbox"> Law & Order</label>
+                <label><input type="checkbox"> Public Transport</label>
+                <label><input type="checkbox"> Municipal Services</label>
+                <label><input type="checkbox"> Stray Cattle</label>
+                <label><input type="checkbox"> Traffic</label>
+                <label><input type="checkbox"> Street Lights</label>
+                <label><input type="checkbox"> Parks & Gardens</label>
+                <label><input type="checkbox"> Public Toilets</label>
+                <label><input type="checkbox"> Cleanliness</label>
+                <label><input type="checkbox"> Bus Services</label>
+            </div>
+            <button type="submit" class="submit-btn">Submit</button>
+        </form>
+    </div>
+</body>
+</html>

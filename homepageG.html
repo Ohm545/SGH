@@ -15,16 +15,16 @@
         }
 
          body {
-        line-height: 1.6;
-        color: #2d3748;
-        overflow-x: hidden;
-        background: #edf4fb; /* New website background */
-    }
+            line-height: 1.6;
+            color: #2d3748;
+            overflow-x: hidden;
+            background: #edf4fb; /* New website background */
+        }
 
 
         /* Navigation - Modified */
         .navbar {
-            background: rgb(48, 104, 179);
+            background:rgb(48, 104, 179);
             padding: 0 1.5rem;
             position: fixed;
             width: 100%;
@@ -304,7 +304,7 @@
 
         /* Footer */
         footer {
-            background:rgb(48, 104, 179);
+            background: rgb(48, 104, 179);
             color: white;
             padding: 4rem 2rem;
             margin-top: 4rem;
@@ -345,17 +345,30 @@
         }
 
         @media (max-width: 768px) {
-            .benefits-container {
-                grid-template-columns: 1fr;
-            }
-            
-            .hero h1 {
-                font-size: 2.5rem;
-            }
-            
-            .nav-links {
-                flex-wrap: wrap;
-            }
+        .nav-links {
+                position: fixed;
+                right: -100%;
+                top: 60px;
+                gap: 0;
+                flex-direction: column;
+                background: #1a365d;
+                width: 100%;
+                text-align: center;
+                transition: 0.3s;
+                padding: 1rem 0;
+                box-shadow: 0 5px 10px rgba(0,0,0,0.2);
+                height: auto; /* Changed from 100vh calculation */
+                max-height: 80vh; /* Prevent taking full screen height */
+                overflow-y: auto; /* Keep scroll if content exceeds */
+    }
+
+    .nav-links li {
+        margin: 0.5rem 0; /* Reduced margin */
+    }
+
+    .nav-links a {
+        padding: 0.75rem 1rem; /* Slightly reduced padding */
+    }
         }
     </style>
 </head>
@@ -386,7 +399,7 @@
             <li><a href="#about">અમારા વિશે</a></li>
             <li><a href="#roadmap">રોડમેપ</a></li>
             <li><a href="contact.html">સંપર્ક કરો</a></li>
-            <li><a href="faq.html">FAQ</a></li>
+            <li><a href="faq.html">વારંવાર પૂછાતા પ્રશ્નો</a></li>
         </ul>
     </nav>
 
@@ -522,13 +535,37 @@
         // Get the browser's language
         var userLang = navigator.language || navigator.userLanguage;
 
-        // Check the language and redirect
-        if (userLang.startsWith('gu')) {
-            window.location.href = 'homepageG.html'; // Redirect to Gujarati version
-        } else {
-            window.location.href = 'homepage.html'; // Default to English
-        }
+       
+        // Mobile Menu Toggle
+        const hamburger = document.querySelector('.hamburger');
+        const navLinks = document.querySelector('.nav-links');
 
+        hamburger.addEventListener('click', () => {
+            navLinks.classList.toggle('active');
+        });
+
+        // Close menu when clicking outside on mobile
+        document.addEventListener('click', (e) => {
+            if (!hamburger.contains(e.target) && !navLinks.contains(e.target)) {
+                navLinks.classList.remove('active');
+            }
+        });
+
+        // Close menu after clicking a link
+        document.querySelectorAll('.nav-links a').forEach(link => {
+            link.addEventListener('click', () => {
+                navLinks.classList.remove('active');
+            });
+        });
+
+
+
+     // Check the language and redirect
+        // if (userLang.startsWith('gu')) {
+        //     window.location.href = 'homepageG.html'; // Redirect to Gujarati version
+        // } else {
+        //     window.location.href = 'homepage.html'; // Default to English
+        // }
     </script>
 </body>
 </html>

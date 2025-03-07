@@ -13,7 +13,7 @@
         }
 
         body {
-            background: linear-gradient(to right, #2c3e50, #34495e);
+            background: #edf4fb;
             display: flex;
             flex-direction: column;
             align-items: center;
@@ -22,11 +22,11 @@
         /* Navbar Styling */
         .navbar {
             width: 100%;
-            background: #1c2833;
+            background: rgb(48, 104, 179);
             padding: 15px 20px;
             display: flex;
             justify-content: center;
-            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.2);
+            box-shadow: 0 2px 10px rgba(18, 17, 17, 0.2);
         }
 
         .nav-links {
@@ -48,7 +48,7 @@
         }
 
         .nav-links .active {
-            background: #2980b9;
+            background: #08066a;
             box-shadow: 0px 4px 8px rgba(41, 128, 185, 0.6);
         }
 
@@ -58,7 +58,7 @@
         }
 
         .nav-links button:hover {
-            background: #2980b9;
+            background: #08066a;
             border: none;
         }
 
@@ -99,14 +99,14 @@
         }
 
         .form-group input:focus {
-            border-color: #2980b9;
+            border-color: rgb(48, 104, 179);
             outline: none;
         }
 
         .login-btn {
             width: 100%;
             padding: 10px;
-            background: #2980b9;
+            background: rgb(48, 104, 179);
             color: white;
             border: none;
             border-radius: 5px;
@@ -116,7 +116,7 @@
         }
 
         .login-btn:hover {
-            background: #1c638d;
+            background: #08066a;
         }
 
         .footer-text {
@@ -140,19 +140,19 @@
 
     <!-- Login Form -->
     <div class="login-container">
-        <h2>Government Portal Login</h2>
+        <h2>Login</h2>
         <form action="/omlogin" method="POST">
             <div class="form-group">
-                <label for="mobile">Mobile Number:</label>
-                <input type="text" id="mobile" name="mobile" placeholder="Enter Your Mobile Number" required>
+                <label for="mobile">Mobile Number<span style="color: red;">*</span></label>
+                <input type="text" id="mobile" name="mobile" pattern="[0-9]{10}" placeholder="Enter Your Mobile Number" required>
             </div>
             <div class="form-group">
-                <label for="pass">Password:</label>
+                <label for="pass">Password<span style="color: red;">*</span></label>
                 <input type="password" id="pass" name="pass" required>
             </div>
             <button type="submit" class="login-btn">Login</button>
         </form>
-        <p class="footer-text">For authorized users only</p>
+        <!-- <p class="footer-text">For authorized users only</p> -->
     </div>
 
 </body>

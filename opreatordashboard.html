@@ -1,0 +1,130 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Operator Dashboard</title>
+    <style>
+        body {
+            font-family: 'Poppins', sans-serif;
+            background: #e6f7ff; /* Very light blue color */
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            margin: 0;
+        }
+
+        .complaintcard {
+            width: 80%;
+            max-width: 900px;
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: center;
+            gap: 20px;
+        }
+
+        .content {
+            background: rgba(255, 255, 255, 0.8); /* Slightly opaque white background */
+            backdrop-filter: blur(10px);
+            border-radius: 15px;
+            padding: 20px;
+            width: 300px;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
+            color: #333; /* Dark text color for better visibility */
+            text-align: center;
+            font-size: 14px;
+            transition: transform 0.3s ease;
+        }
+
+        .content:hover {
+            transform: translateY(-5px);
+        }
+
+        .buttons {
+            margin-top: 15px;
+            display: flex;
+            justify-content: space-around;
+        }
+
+        button {
+            padding: 10px 15px;
+            border: none;
+            border-radius: 8px;
+            font-size: 14px;
+            cursor: pointer;
+            transition: 0.3s;
+        }
+
+        .redirect-btn {
+            background-color: #4CAF50;
+            color: white;
+        }
+
+        .redirect-btn:hover {
+            background-color: #45a049;
+        }
+
+        .decline-btn {
+            background-color: #ff4d4d;
+            color: white;
+        }
+
+        .decline-btn:hover {
+            background-color: #e60000;
+        }
+    </style>
+</head>
+<body>
+    <div id="complaintcard" class="complaintcard"></div>
+    <script>
+        fetch("http://localhost:5000/complaintcard")
+        .then(response => response.json())
+        .then(data => {
+            const cardElement = document.getElementById("complaintcard");
+    
+            data.forEach(card => {
+                const element = document.createElement("div");
+                element.classList.add('content');
+                element.innerHTML = `<p><strong>ID:</strong> ${card.id} <br>
+                                     <strong>Title:</strong> ${card.title} <br>
+                                     <strong>Description:</strong> ${card.description}</p>`;
+    
+                const buttonsContainer = document.createElement("div");
+                buttonsContainer.classList.add("buttons");
+    
+                const but1 = document.createElement("button");
+                but1.type = "button";
+                but1.innerHTML = 'Redirect';
+                but1.classList.add("redirect-btn");
+                but1.addEventListener("click", () => handleRedirect(card.id));
+    
+                const but2 = document.createElement("button");
+                but2.type = "button";
+                but2.innerHTML = 'Decline';
+                but2.classList.add("decline-btn");
+    
+                buttonsContainer.append(but1, but2);
+                element.appendChild(buttonsContainer);
+                cardElement.appendChild(element);
+            });
+        })
+        .catch(error => console.error("Error:", error));
+    
+        function handleRedirect(complaintId) {
+            fetch("http://localhost:5000/redirect", {
+                method: "POST",
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify({ id: complaintId })
+            })
+            .then(response => response.json())
+            .then(data => {
+                console.log("Redirected:", data);
+                window.location.href = "/public/department.html";
+            })
+            .catch(error => console.error("Error:", error));
+        }
+    </script>
+    
+</body>
+</html>

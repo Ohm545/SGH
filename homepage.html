@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Complaint Express - Digital Grievance Redressal</title>
+    <title>Grievance Express - Digital Grievance Redressal</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
     <style>
         /* Base Styles */
@@ -15,11 +15,11 @@
         }
 
          body {
-        line-height: 1.6;
-        color: #2d3748;
-        overflow-x: hidden;
-        background: #edf4fb; /* New website background */
-    }
+            line-height: 1.6;
+            color: #2d3748;
+            overflow-x: hidden;
+            background: #edf4fb; /* New website background */
+        }
 
 
         /* Navigation - Modified */
@@ -345,17 +345,30 @@
         }
 
         @media (max-width: 768px) {
-            .benefits-container {
-                grid-template-columns: 1fr;
-            }
-            
-            .hero h1 {
-                font-size: 2.5rem;
-            }
-            
             .nav-links {
-                flex-wrap: wrap;
-            }
+        position: fixed;
+        right: -100%;
+        top: 60px;
+        gap: 0;
+        flex-direction: column;
+        background: #1a365d;
+        width: 100%;
+        text-align: center;
+        transition: 0.3s;
+        padding: 1rem 0;
+        box-shadow: 0 5px 10px rgba(0,0,0,0.2);
+        height: auto; /* Changed from 100vh calculation */
+        max-height: 80vh; /* Prevent taking full screen height */
+        overflow-y: auto; /* Keep scroll if content exceeds */
+    }
+
+    .nav-links li {
+        margin: 0.5rem 0; /* Reduced margin */
+    }
+
+    .nav-links a {
+        padding: 0.75rem 1rem; /* Slightly reduced padding */
+    }
         }
     </style>
 </head>
@@ -373,7 +386,7 @@
                     <path d="M16 36h12M16 42h12M16 48h12" stroke="#fff"/>
                 </g>
             </svg>
-            <span class="logo-text">Complaint Express</span>
+            <span class="logo-text">Grievance Express</span>
         </a>
         
         <button class="hamburger">
@@ -454,8 +467,8 @@
     <!-- About Section -->
     <section class="about-section" id="about">
         <div class="about-content">
-            <h2>About Complaint Express</h2>
-            <p>Complaint Express is an AI-powered platform designed to bridge the gap between citizens and government officials. We streamline the complaint process, ensuring that every voice is heard and addressed by the right department. Our mission is to promote transparency, enhance accountability, and empower citizens to participate actively in governance.</p>
+            <h2>About Grievance Express</h2>
+            <p>Grievance Express is an AI-powered platform designed to bridge the gap between citizens and government officials. We streamline the complaint process, ensuring that every voice is heard and addressed by the right department. Our mission is to promote transparency, enhance accountability, and empower citizens to participate actively in governance.</p>
         </div>
     </section>
 
@@ -486,7 +499,7 @@
         <div class="footer-content">
             <div class="footer-section">
                 <h3>Contact Us</h3>
-                <p><a href="mailto:complaintexpress@gmail.com?subject=Feedback&body=Hello!">📧 complaintexpress@gmail.com</a></p>
+                <p><a href="mailto:complaintexpress@gmail.com?subject=Feedback&body=Hello!">📧 grievanceexpress@gmail.com</a></p>
                 <!-- <p>📞 +91-XXX-XXX-XXXX</p> -->
                 <p><a href="https://www.ddu.ac.in/">🎓 Dharmsinh Desai University, Gujarat</a></p>
             </div>
@@ -522,12 +535,37 @@
         // Get the browser's language
         var userLang = navigator.language || navigator.userLanguage;
 
-        // Check the language and redirect
-        if (userLang.startsWith('gu')) {
-            window.location.href = 'homepageG.html'; // Redirect to Gujarati version
-        } else {
-            window.location.href = 'homepage.html'; // Default to English
-        }
+       
+        // Mobile Menu Toggle
+        const hamburger = document.querySelector('.hamburger');
+        const navLinks = document.querySelector('.nav-links');
+
+        hamburger.addEventListener('click', () => {
+            navLinks.classList.toggle('active');
+        });
+
+        // Close menu when clicking outside on mobile
+        document.addEventListener('click', (e) => {
+            if (!hamburger.contains(e.target) && !navLinks.contains(e.target)) {
+                navLinks.classList.remove('active');
+            }
+        });
+
+        // Close menu after clicking a link
+        document.querySelectorAll('.nav-links a').forEach(link => {
+            link.addEventListener('click', () => {
+                navLinks.classList.remove('active');
+            });
+        });
+
+
+
+     // Check the language and redirect
+        // if (userLang.startsWith('gu')) {
+        //     window.location.href = 'homepageG.html'; // Redirect to Gujarati version
+        // } else {
+        //     window.location.href = 'homepage.html'; // Default to English
+        // }
 
     </script>
 </body>

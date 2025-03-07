@@ -13,7 +13,7 @@
         }
 
         body {
-            background: linear-gradient(to right, #2c3e50, #34495e);
+            background: #edf4fb;
             display: flex;
             flex-direction: column;
             align-items: center;
@@ -21,7 +21,7 @@
 
         .navbar {
             width: 100%;
-            background: #1c2833;
+            background: rgb(38, 114, 213);
             padding: 15px 20px;
             display: flex;
             justify-content: center;
@@ -47,7 +47,7 @@
         }
 
         .nav-links .active {
-            background: #2980b9;
+            background:  #08066a;
             box-shadow: 0px 4px 8px rgba(41, 128, 185, 0.6);
         }
 
@@ -57,7 +57,7 @@
         }
 
         .nav-links button:hover {
-            background: #2980b9;
+            background:  #08066a;
             border: none;
         }
 
@@ -97,14 +97,14 @@
         }
 
         .form-group input:focus {
-            border-color: #2980b9;
+            border-color: rgb(48, 104, 179);
             outline: none;
         }
 
         .signup-btn {
             width: 100%;
             padding: 10px;
-            background: #2980b9;
+            background:  rgb(38, 114, 213);
             color: white;
             border: none;
             border-radius: 5px;
@@ -114,7 +114,7 @@
         }
 
         .signup-btn:hover {
-            background: #1c638d;
+            background:  #08066a;
         }
 
         .footer-text {
@@ -136,39 +136,43 @@
     </nav>
 
     <div class="signup-container">
-        <h2>Citizen Signup</h2>
+        <h2>Signup</h2>
         <form action="/signup" method="POST">
             <div class="form-group">
-                <label for="name">Name:</label>
+                <label for="name">Name<span style="color: red;">*</span></label>
                 <input type="text" name="name" id="name" placeholder="Enter your name" required>
             </div>
             <div class="form-group">
-                <label for="phonenumber">Phone Number:</label>
+                <label for="phonenumber">Phone Number<span style="color: red;">*</span></label>
                 <input type="tel" name="phonenumber" id="phonenumber" placeholder="Enter your phone number" required>
             </div>
             <div class="form-group">
-                <label for="email">Email:</label>
+                <label for="email">Email<span style="color: red;">*</span></label>
                 <input type="email" name="email" id="email" placeholder="Enter your email" required>
             </div>
             <div class="form-group">
-                <label for="taluka">Taluka:</label>
+                <label for="taluka">Taluka<span style="color: red;">*</span></label>
                 <input type="text" name="taluka" id="taluka" placeholder="Enter your Taluka" required>
             </div>
             <div class="form-group">
-                <label for="district">District:</label>
+                <label for="district">District<span style="color: red;">*</span></label>
                 <input type="text" name="district" id="district" placeholder="Enter your district" required>
             </div>
             <div class="form-group">
-                <label for="place">City/Village:</label>
-                <input id="place" name="place" placeholder="Enter your City/Village" type="text" required>
+                <label for="place">Village<span style="color: red;">*</span></label>
+                <input id="place" name="place" placeholder="Enter your Village" type="text" required>
             </div>
             <div class="form-group">
-                <label for="password">Generate Password:</label>
+                <label for="place">Panchayat Vilage<span style="color: red;">*</span></label>
+                <input id="place" name="place" placeholder="Panchayat under which your village falls" type="text" required>
+            </div>
+            <div class="form-group">
+                <label for="password">Generate Password<span style="color: red;">*</span></label>
                 <input type="password" name="password" id="password" placeholder="Create a password" required>
             </div>
             <button type="submit" class="signup-btn">Sign Up</button>
         </form>
-        <p class="footer-text">For authorized citizens only</p>
+        <!-- <p class="footer-text">For authorized citizens only</p> -->
     </div>
 
 </body>

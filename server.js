@@ -5,6 +5,7 @@ import { fileURLToPath } from "url";
 import nodemailer from "nodemailer";
 import "dotenv/config";
 import pkg from "pg";
+import twilio from "twilio";
 
 const { Pool } = pkg;
 const app = express();
@@ -39,7 +40,7 @@ app.post("/login1", (req, res) => {
 });
 
 var Email = "";
-
+var citizenEmail="";
 app.post("/get-otp", async (req, res) => {
     const { officialname, email, phonenumber, pincode, post, password } = req.body;
 
@@ -50,7 +51,7 @@ app.post("/get-otp", async (req, res) => {
 
     try {
         await pool.query(
-            'INSERT IGNORE INTO verifyofficals (officialname, email, phonenumber, pincode, post, passwordoff) VALUES ($1, $2, $3, $4, $5, $6)',
+            'INSERT INTO verifyofficals (officialname, email, phonenumber, pincode, post, passwordoff) VALUES ($1, $2, $3, $4, $5, $6)',
             [officialname, email, phonenumber, pincode, post, password]
         );
 
@@ -93,6 +94,25 @@ app.post("/get-otp", async (req, res) => {
         res.status(500).json({ error: "Database error" });
     }
 });
+const accountSid = process.env.TWILIO_SID;
+const authToken = process.env.TWILIO_AUTH_TOKEN;
+const client = new twilio(accountSid, authToken);
+
+app.post("/loginoff",async(req,res)=>{
+    const otp = otpGenerator.generate(6,{text:true});
+    const {mobile,password}=req.body;
+    try {
+        const response = await client.messages.create({
+            body:`Verification ${otp}`,
+            from: process.env.TWILIO_PHONE_NUMBER,
+            to:mobile
+        });
+        // res.status(200).json({ success: true, message: "SMS sent!", sid: response.sid });
+        res.sendFile(path.join(__dirname,"public","opreatordashboard.html"));
+        } catch (error) {
+            res.status(500).json({ success: false, error: error.message });
+        }
+});
 app.post("/citizen",(req,res)=>{
     res.sendFile(path.join(__dirname,"public","citizenlogin.html"));
 });
@@ -102,8 +122,90 @@ app.post("/citizensignup",(req,res)=>{
 app.post("/citizenlogin",(req,res)=>{
     res.sendFile(path.join(__dirname,"public","citizenlogin.html"));
 });
-app.post("/omlogin",(req,res)=>{
-    res.sendFile(path.join(__dirname,"public","citizendashboard.html"));
+app.post("/omlogin", async (req, res) => {
+    const { mobile, pass } = req.body;
+
+    try {
+        const { rows } = await pool.query('SELECT phonenumber FROM citizenverify WHERE passwordofcitizen = $1', [pass]);
+
+        if (rows.length === 0) {
+            return res.status(400).json({ error: "Invalid password" });
+        }
+
+        const { phonenumber } = rows[0];
+
+        if (mobile !== phonenumber) {
+            return res.status(400).json({ error: "Invalid mobile number" });
+        }
+
+        res.sendFile(path.join(__dirname, "public", "citizendashboard.html"));
+    } catch (error) {
+        console.error("Error during login:", error);
+        res.status(500).json({ error: "Internal server error" });
+    }
+});
+app.post("/signup",async(req,res)=>{
+    const  otp1= otpGenerator.generate(6,{text:true});
+    const {name,phonenumber,email,taluka,district,place,password}=req.body;
+    const expiryTime=new Date(Date.now()+5*60*1000);
+    citizenEmail=email;
+    await pool.query('INSERT IGNORE INTO citizenverify (nameofcitizen,phonenumber,email,taluka,district,place,passwordofcitizen,otp,expirytime) VALUES ($1,$2,$3,$4,$5,$6,$7,$8,$9)',[name,phonenumber,email,taluka,district,place,password,otp1,expiryTime]);
+    try{
+        const transporter = nodemailer.createTransport({
+            service:'gmail',
+            auth: {
+                user: "ohmpatel655@gmail.com",
+                pass: process.env.GG_PASS, 
+            },
+        })
+        const mailOptions = {
+            from:'ohmpatel655@gmail.com',
+            to:email,
+            subject:'Verification',
+            text:`Your OTP is ${otp1}`
+        }
+        await transporter.sendMail(mailOptions);
+        res.sendFile(path.join(__dirname,"public","otp.html"));
+    }
+    catch(error){
+        console.error("Error sending OTP:", error);
+        return res.status(500).json({ error: "Error sending OTP." });
+    }
+});
+app.get("/complaintcard",(req,res)=>{
+    const complaints =[
+        { id: 1, title: "Card 1", description: "This is card 1" },
+        { id: 2, title: "Card 2", description: "This is card 2" },
+        { id: 3, title: "Card 3", description: "This is card 3" }
+    ]
+    res.json(complaints);
+});
+app.post("/redirect",(req,res)=>{
+    res.sendFile(path.join(__dirname,"public","department.html"));
+});
+app.post("/citizenverify",async(req,res)=>{
+    const {otptemp}=req.body;
+    const {otp,expiryTime}=await pool.query('SELECT otp,expirytime FROM citizenverify WHERE email=$1',[citizenEmail]);
+    const currentTime=Date.now();
+    try{
+    if(String(otptemp).trim() !== String(otp).trim())
+    {
+        console.log('Invalid OTP');
+        return res.sendStatus(400).json({error:"Invalid Email"});
+        await pool.query('DELETE FROM citizenverify WHERE email = $1', [Email]);
+    }
+    else if(currentTime>expiryTime)
+    {
+        console.log('Time limit expired');
+        return res.sendStatus(400).json({error:"Time limit expired"});
+        await pool.query('DELETE FROM citizenverify WHERE email = $1', [Email]);
+    }
+    return res.json({message:'Done'});
+}
+catch(error)
+{
+    return res.sendStatus(400).json({error:"Internal server error"});
+}
 });
 app.post("/verify", async (req, res) => {
     try {

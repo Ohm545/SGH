@@ -562,7 +562,7 @@
             <!-- Complaint Section -->
             <div id="complaint" class="hidden">
                 <div class="form-heading">File New Complaint</div>
-                <form id="complaintForm">
+                <form id="complaintForm" action="/dashboard" method="POST" enctype="multipart/form-data">
                     <fieldset>
                         <legend>Personal Information</legend>
                         <div class="two-col">
@@ -664,6 +664,10 @@
                         <div class="form-group">
                             <label>Problem Description <span class="required-star">*</span></label>
                             <textarea id="description" rows="5" required></textarea>
+                        </div>
+                        <div>
+                            <label for="imageUpload">Upload a Picture:</label>
+                            <input type="file" id="imageUpload" name="image" accept="image/*" required> 
                         </div>
                         <button type="submit" id="submit-button">Submit Complaint</button>
                     </fieldset>

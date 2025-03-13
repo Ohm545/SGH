@@ -1,18 +1,26 @@
 {
   "version": 2,
   "builds": [
+  
     {
       "src": "backend/server.js",
       "use": "@vercel/node"
+    },
+  
+    {
+      "src": "backend/public/**",
+      "use": "@vercel/static"
     }
   ],
   "routes": [
+  
+    {
+      "src": "/(.*\\.(ico|png|jpg|css|js))",
+      "dest": "backend/public/$1"
+    },
     {
       "src": "/(.*)",
       "dest": "backend/server.js"
     }
-  ],
-  "static": {
-    "directory": "backend/public" 
-  }
+  ]
 }

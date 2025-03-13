@@ -13,6 +13,6 @@
     }
   ],
   "static": {
-    "directory": "backend/public"  // Update if your static files are in a different folder
+    "directory": "backend/public" 
   }
 }

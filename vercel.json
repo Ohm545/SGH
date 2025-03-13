@@ -1,10 +1,18 @@
 {
-    "version": 2,
-    "builds": [
-      { "src": "backend/server.js", "use": "@vercel/node" }
-    ],
-    "routes": [
-      { "src": "/backend/(.*)", "dest": "/backend/server.js" }
-    ]
+  "version": 2,
+  "builds": [
+    {
+      "src": "backend/server.js",
+      "use": "@vercel/node"
+    }
+  ],
+  "routes": [
+    {
+      "src": "/(.*)",
+      "dest": "backend/server.js"
+    }
+  ],
+  "static": {
+    "directory": "backend/public"  // Update if your static files are in a different folder
   }
-  
+}

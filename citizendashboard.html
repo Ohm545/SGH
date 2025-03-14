@@ -494,15 +494,15 @@
         }
 
         .content-area {
-    background: white;
-    border-radius: 20px;
-    padding: 40px;
-    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.05);
-    position: relative; /* Add this */
-    height: calc(100vh - 60px); /* Set a fixed height */
-    overflow-y: auto; /* Enable scrolling */
-    scrollbar-width: none; /* Hide scrollbar for Firefox */
-    -ms-overflow-style: none; /* Hide scrollbar for IE/Edge */
+            background: white;
+            border-radius: 20px;
+            padding: 40px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.05);
+            position: relative; /* Add this */
+            height: calc(100vh - 60px); /* Set a fixed height */
+            overflow-y: auto; /* Enable scrolling */
+            scrollbar-width: none; /* Hide scrollbar for Firefox */
+            -ms-overflow-style: none; /* Hide scrollbar for IE/Edge */
 }
 
 /* Hide scrollbar for Chrome/Safari */
@@ -514,8 +514,7 @@
 <body>
     <div class="video-background">
         <video autoplay muted loop id="bg-video">
-            <source src="9667569-hd_1920_1080_25fps.mp4" type="video/mp4">
-            Your browser does not support the video tag.
+            <source src="\Hack2\9667569-hd_1920_1080_25fps.mp4" type="video/mp4">
         </video>
     </div>
     <div class="container">
@@ -568,17 +567,17 @@
                         <div class="two-col">
                             <div class="form-group">
                                 <label>Full Name <span class="required-star">*</span></label>
-                                <input type="text" id="name" required>
+                                <input type="text" id="name" name="name" required placeholder="surname name father's_name">
                             </div>
                             <div class="form-group">
                                 <label>Mobile Number <span class="required-star">*</span></label>
-                                <input type="tel" id="mobile" pattern="[0-9]{10}" required>
+                                <input type="tel" id="mobile" name="mobile" maxlength="13" minlength="13" pattern="\d{13}" placeholder="+919876543210" required>
                             </div>
                         </div>
                         <div class="two-col">
                             <div class="form-group">
                                 <label>Taluka <span class="required-star">*</span></label>
-                                <select id="taluka" required>
+                                <select id="taluka"  name="taluka"  required>
                                     <option value="">Select Taluka</option>
                                     <option value="Ahwa">Ahwa</option>
                                     <option value="Subir">Subir</option>
@@ -587,7 +586,7 @@
                             </div>
                             <div class="form-group">
                                 <label>Location Type <span class="required-star">*</span></label>
-                                <select id="locationType" required>
+                                <select id="locationType" name="locationType" required>
                                     <option value="">Select Type</option>
                                     <option value="village">Village</option>
                                     <option value="city">City</option>
@@ -596,20 +595,20 @@
                         </div>
                         <div class="form-group">
                             <label>Select Village/City <span class="required-star">*</span></label>
-                            <select id="villageCity" required></select>
+                            <select id="villageCity" name="villageCity"  required></select>
                         </div>
                         <div class="form-group">
                             <label>Complete Address <span class="required-star">*</span></label>
-                            <textarea id="address" rows="3" required></textarea>
+                            <textarea id="address" name="address" rows="3" required></textarea>
                         </div>
                         <div class="two-col">
                             <div class="form-group">
                                 <label>Pincode <span class="required-star">*</span></label>
-                                <input type="text" id="pincode" pattern="[0-9]{6}" required>
+                                <input type="text" id="pincode" name="pincode" pattern="[0-9]{6}" required>
                             </div>
                             <div class="form-group">
                                 <label>Exact Location of the problem <span class="required-star">*</span></label>
-                                <textarea id="location" rows="1" required></textarea>
+                                <textarea id="location" name="exactLocation"  rows="1" required></textarea>
                             </div>
                         </div>
                     </fieldset>
@@ -619,51 +618,51 @@
                         <div class="two-col">
                             <div class="form-group">
                                 <label>Complaint Category <span class="required-star">*</span></label>
-                                <select id="complaintCategory" required>
-                                    <option value="">Select Category</option>
-                                    <option value="2"> (પાણી પુરવઠો) Water Supply</option>
-                                    <option value="38"> (ટ્રાફિક સિગ્નલ) Traffic Signal</option>
-                                    <option value="39"> (સ્વિમિંગ પુલ) Swimming Pool</option>
-                                    <option value="4"> (સ્ટ્રીટ લાઈટ) Street Light</option>
-                                    <option value="30"> (રખડતા કુતરા) Stray Dog Sterilization and ARV</option>
-                                    <option value="26"> (રખડતા ઢોર) Stray Cattle</option>
-                                    <option value="18"> (વરસાદી ગટર પ્રોજેક્ટ) Storm Water Drainage Project</option>
-                                    <option value="9"> (જાહેર સૌચાલઈ) Public Toilet</option>
-                                    <option value="10"> (જાહેર આરોગ્ય) Public Health</option>
-                                    <option value="22"> (પાર્ક અને ગાર્ડેન) Parks and Garden</option>
-                                    <option value="31"> (જાહેરમાં શૌચાલય) Open Defecation</option>
-                                    <option value="28"> (મોલ પાર્કિંગ ફી ને લગતી) Mall Parking Fee Related</option>
-                                    <option value="17"> (હોસ્પિટલ અને દવાખાના) Hospital And Dispensary</option>
-                                    <option value="23"> (ગુજરાત ગ્રામ્ય શહેરી હાઉસિંગ સ્કીમ) Gujarat Rural Urban Housing Scheme</option>
-                                    <option value="37"> (ગેસ લાઈન) Gas Line</option>
-                                    <option value="8"> (કચરો અને સફાઈ) Garbage And Cleanliness</option>
-                                    <option value="46"> (એનક્રોચમેન્ટ(દબાણ)) Encroachment</option>
-                                    <option value="45"> (ઈમરજેંસી) Emergency</option>
-                                    <option value="24"> (ઈ વેસ્ટ) E Waste</option>
-                                    <option value="19"> (ગટર પ્રોજેક્ટ) Drainage Project</option>
-                                    <option value="1"> (ગટર અને વરસાદી ગટર) Drainage And Storm Drain</option>
-                                    <option value="27"> (કચરા ગાડી વિષે ની ફરીયાદ) Door To Door Garbage Collection</option>
-                                    <option value="5"> (મરેલા જાનવર) Dead Animals</option>
-                                    <option value="48"> (સિટી બસ સર્વિસીસ) City Bus Services</option>
-                                    <option value="11"> (જન્મ અને મરણ) Birth And Death</option>
-                                    <option value="41"> (ઓડિટોરિયમ) Auditorium</option>
-                                    <option value="40"> (અતિથિ ગૃહ) Atithi Gruh</option>
-                                    <option value="47"> (અસેસમેન્ટ ટેક્સ રિબેટ) Assessment Tax Rebate</option>
-                                    <option value="34"> (આરોગ્યમ) Arogyam</option>
-                                    <option value="44"> (હવાની ગુણવત્તા વ્યવસ્થાપન) Air Quality Management</option>
-                                    <option value="999"> ( અન્ય )  Other </option>
+                                <select id="complaintCategory" name="complaintCategory"  required>
+                                    <option value="">(શ્રેણી પસંદ કરો)Select Category</option>
+                                    <option value="Water Supply"> (પાણી પુરવઠો) Water Supply</option>
+                                    <option value="Traffic Signal"> (ટ્રાફિક સિગ્નલ) Traffic Signal</option>
+                                    <option value="Swimming Pool"> (સ્વિમિંગ પુલ) Swimming Pool</option>
+                                    <option value="Street Light"> (સ્ટ્રીટ લાઈટ) Street Light</option>
+                                    <option value="Stray Dog Sterilization and ARV"> (રખડતા કુતરા) Stray Dog Sterilization and ARV</option>
+                                    <option value="Stray Cattle"> (રખડતા ઢોર) Stray Cattle</option>
+                                    <option value="Storm Water Drainage Project"> (વરસાદી ગટર પ્રોજેક્ટ) Storm Water Drainage Project</option>
+                                    <option value="Public Toilet"> (જાહેર સૌચાલઈ) Public Toilet</option>
+                                    <option value="Public Health"> (જાહેર આરોગ્ય) Public Health</option>
+                                    <option value=" Parks and Garden"> (પાર્ક અને ગાર્ડેન) Parks and Garden</option>
+                                    <option value="Open Defecation"> (જાહેરમાં શૌચાલય) Open Defecation</option>
+                                    <option value="Mall Parking Fee Related"> (મોલ પાર્કિંગ ફી ને લગતી) Mall Parking Fee Related</option>
+                                    <option value="Hospital And Dispensary"> (હોસ્પિટલ અને દવાખાના) Hospital And Dispensary</option>
+                                    <option value="Gujarat Rural Urban Housing Scheme"> (ગુજરાત ગ્રામ્ય શહેરી હાઉસિંગ સ્કીમ) Gujarat Rural Urban Housing Scheme</option>
+                                    <option value="Gas Line"> (ગેસ લાઈન) Gas Line</option>
+                                    <option value="Garbage And Cleanliness"> (કચરો અને સફાઈ) Garbage And Cleanliness</option>
+                                    <option value="Encroachment"> (એનક્રોચમેન્ટ(દબાણ)) Encroachment</option>
+                                    <option value=" Emergency"> (ઈમરજેંસી) Emergency</option>
+                                    <option value="E Waste"> (ઈ વેસ્ટ) E Waste</option>
+                                    <option value="Drainage Project"> (ગટર પ્રોજેક્ટ) Drainage Project</option>
+                                    <option value="Drainage And Storm Drain"> (ગટર અને વરસાદી ગટર) Drainage And Storm Drain</option>
+                                    <option value="Door To Door Garbage Collection"> (કચરા ગાડી વિષે ની ફરીયાદ) Door To Door Garbage Collection</option>
+                                    <option value="Dead Animals"> (મરેલા જાનવર) Dead Animals</option>
+                                    <option value="City Bus Services"> (સિટી બસ સર્વિસીસ) City Bus Services</option>
+                                    <option value="Birth And Death"> (જન્મ અને મરણ) Birth And Death</option>
+                                    <option value="Auditorium"> (ઓડિટોરિયમ) Auditorium</option>
+                                    <option value="Auditorium"> (અતિથિ ગૃહ) Auditorium</option>
+                                    <option value="Assessment Tax Rebate"> (અસેસમેન્ટ ટેક્સ રિબેટ) Assessment Tax Rebate</option>
+                                    <option value="Arogyam"> (આરોગ્યમ) Arogyam</option>
+                                    <option value="Air Quality Management"> (હવાની ગુણવત્તા વ્યવસ્થાપન) Air Quality Management</option>
+                                    <option value="Other"> ( અન્ય )  Other </option>
                                 </select>
                             </div>
                             <div class="form-group">
                                 <label>Complaint Type <span class="required-star">*</span></label>
-                                <select id="complaintType" required>
+                                <select id="complaintType" name="complaintType" required>
                                     <option value="">Select Type</option>
                                 </select>
                             </div>
                         </div>
                         <div class="form-group">
                             <label>Problem Description <span class="required-star">*</span></label>
-                            <textarea id="description" rows="5" required></textarea>
+                            <textarea id="description" rows="5" name="problemDesc"  required></textarea>
                         </div>
                         <div>
                             <label for="imageUpload">Upload a Picture:</label>
@@ -740,55 +739,55 @@
 
         const complaintTypes = {
             "2": [
-                { value: "19", text: " ( અશુદ્ધ, ક્ન્ટામિનેટેડ પાણી  )  Contaminated Water (Impure)" },
-                { value: "172", text: " ( ડાયરેક્ટ મોટર ચલાવવી )  Direct Motor Running" },
-                { value: "173", text: " ( ગેરકાયદેસર જોડાણ )  Illegal Connection" },
-                { value: "17", text: " ( અપૂરતો પાણી વિતરણનો સમય ગાળો   )  Insufficient Water Supply Duration" },
-                { value: "12", text: " ( જાહેર સ્ટેન્ડ પોસ્ટની દુરસ્તી  )  Leakage of Public Stand Post" },
-                { value: "100", text: " ( નીચા પાણીનું દબાણ  )  Low Water Pressure" },
-                { value: "108", text: " ( મુખ્ય નળીકા / ફીડલ નળીકા લીકેજ  )  Main Feeder Line Leakage" },
-                { value: "13", text: " ( પાઇપલાઈન લીકેજ  )  Pipeline Leakage" },
-                { value: "104", text: " ( પીવાના પાણી પુરવઠામાં કલોરીનીકરણની તીવ્રતા સ્તર ઘટાડો  )  Reduction of Chlorination Intensity" },
-                { value: "122", text: " ( વાલ્વ રિપેરિંગની  ફરિયાદો )  Valve Repairing" },
-                { value: "14", text: " ( હેન્ડ પંપ સમારકામ )  Repairing of Hand Pump" },
-                { value: "109", text: " ( વાલ્વ લીકેજ  )  Valve Leakage" },
-                { value: "181", text: " ( પાણીનું નેટવર્ક હયાત નથી )  Water Network Not Exist" },
-                { value: "20", text: " ( પાણી પુરવઠો મળ્યો નથી  )  Water Supply Not Received" },
-                { value: "18", text: " ( અન્ય )  Other" }
+                { value: " Contaminated Water (Impure)", text: " ( અશુદ્ધ, ક્ન્ટામિનેટેડ પાણી  )  Contaminated Water (Impure)" },
+                { value: " Direct Motor Running", text: " ( ડાયરેક્ટ મોટર ચલાવવી )  Direct Motor Running" },
+                { value: "Illegal Connection", text: " ( ગેરકાયદેસર જોડાણ )  Illegal Connection" },
+                { value: "Insufficient Water Supply Duration", text: " ( અપૂરતો પાણી વિતરણનો સમય ગાળો   )  Insufficient Water Supply Duration" },
+                { value: "Leakage of Public Stand Post", text: " ( જાહેર સ્ટેન્ડ પોસ્ટની દુરસ્તી  )  Leakage of Public Stand Post" },
+                { value: "Low Water Pressure", text: " ( નીચા પાણીનું દબાણ  )  Low Water Pressure" },
+                { value: "Main Feeder Line Leakage", text: " ( મુખ્ય નળીકા / ફીડલ નળીકા લીકેજ  )  Main Feeder Line Leakage" },
+                { value: "Pipeline Leakage", text: " ( પાઇપલાઈન લીકેજ  )  Pipeline Leakage" },
+                { value: "Reduction of Chlorination Intensity", text: " ( પીવાના પાણી પુરવઠામાં કલોરીનીકરણની તીવ્રતા સ્તર ઘટાડો  )  Reduction of Chlorination Intensity" },
+                { value: "Valve Repairing", text: " ( વાલ્વ રિપેરિંગની  ફરિયાદો )  Valve Repairing" },
+                { value: "Repairing of Hand Pump", text: " ( હેન્ડ પંપ સમારકામ )  Repairing of Hand Pump" },
+                { value: "Valve Leakage", text: " ( વાલ્વ લીકેજ  )  Valve Leakage" },
+                { value: "Water Network Not Exist", text: " ( પાણીનું નેટવર્ક હયાત નથી )  Water Network Not Exist" },
+                { value: "Water Supply Not Received", text: " ( પાણી પુરવઠો મળ્યો નથી  )  Water Supply Not Received" },
+                { value: "Other", text: " ( અન્ય )  Other" }
             ],
             "38": [
-                { value: "196", text: " ( જાહેરાત અંગે સમસ્યા )  Advertise Related Issue" },
-                { value: "195", text: " ( ડિસ્પ્લે બોર્ડ નથી ચાલતું )  Display Board Not Working" },
-                { value: "192", text: " ( સમાન સંકેત (માલ ફંક્શન) )  Mal Function" },
-                { value: "193", text: " ( થાંભલો જોખમી છે )  Pole Damage" },
-                { value: "194", text: " ( લાઈટમાં નુકસાન છે )  Signal Light Damage" },
-                { value: "190", text: " ( સિગ્નલ ચાલતું નથી )  Signal Not Working" },
-                { value: "191", text: " ( સિગ્નલ ટાઈમ અયોગ્ય )  Signal Timing Improper" },
-                { value: "185", text: " ( અન્ય  )  Other" }
+                { value: "Advertise Related Issue", text: " ( જાહેરાત અંગે સમસ્યા )  Advertise Related Issue" },
+                { value: "  Display Board Not Working", text: " ( ડિસ્પ્લે બોર્ડ નથી ચાલતું )  Display Board Not Working" },
+                { value: "Mal Function", text: " ( સમાન સંકેત (માલ ફંક્શન) )  Mal Function" },
+                { value: "Pole Damage", text: " ( થાંભલો જોખમી છે )  Pole Damage" },
+                { value: "Signal Light Damage", text: " ( લાઈટમાં નુકસાન છે )  Signal Light Damage" },
+                { value: "Signal Not Working", text: " ( સિગ્નલ ચાલતું નથી )  Signal Not Working" },
+                { value: "Signal Timing Improper", text: " ( સિગ્નલ ટાઈમ અયોગ્ય )  Signal Timing Improper" },
+                { value: "Other", text: " ( અન્ય  )  Other" }
             ],
             "39": [
-                { value: "201", text: " ( સ્વચ્છતાની સમસ્યા )  Cleanliness Issue" },
-                { value: "203", text: " ( વધુ ક્લોરીન )  High Chlorine" },
-                { value: "200", text: " ( સ્વચ્છતાની કાળજી રાખતા નથી )  Not Taking Care of Hygiene" },
-                { value: "198", text: " ( ફુવારો ચાલતો નથી )  Shower Not Working" },
-                { value: "202", text: " ( કર્મચારી હાજર નથી )  Staff Not Present" },
-                { value: "204", text: " ( પાણી બદલાતુ નથી )  Water Not Changed" },
-                { value: "199", text: " ( પાણીની સફાઈ થયેલ નથી )  Water Not Cleaned" },
-                { value: "205", text: " ( અન્ય )  Other" }
+                { value: " Cleanliness Issue", text: " ( સ્વચ્છતાની સમસ્યા )  Cleanliness Issue" },
+                { value: "High Chlorine", text: " ( વધુ ક્લોરીન )  High Chlorine" },
+                { value: "Not Taking Care of Hygiene", text: " ( સ્વચ્છતાની કાળજી રાખતા નથી )  Not Taking Care of Hygiene" },
+                { value: "Shower Not Working", text: " ( ફુવારો ચાલતો નથી )  Shower Not Working" },
+                { value: "Staff Not Present", text: " ( કર્મચારી હાજર નથી )  Staff Not Present" },
+                { value: " Water Not Changed", text: " ( પાણી બદલાતુ નથી )  Water Not Changed" },
+                { value: "Water Not Cleaned", text: " ( પાણીની સફાઈ થયેલ નથી )  Water Not Cleaned" },
+                { value: "Other", text: " ( અન્ય )  Other" }
             ],
             "4": [
-                { value: "130", text: " ( વિસ્તારમાં સ્ટ્રીટ લાઈટ ચાલતી નથી  )  Area Street Light Not Working" },
-                { value: "131", text: " ( થાંબલા પર ઈલેક્ટ્રીક શોક / હાલના થાંબલા પર લિકેજ )  Electric Shock/Current Leakage on Pole" },
-                { value: "132", text: " ( અપૂરતો પ્રકાશ  )  Insufficient Lighting" },
-                { value: "147", text: " ( LED લાઈટ ચાલતી નથી  )  LED Light Not Working" },
-                { value: "133", text: " ( ઓવરહેડ લાઈન સમસ્યા  )  Overhead Line Problem" },
-                { value: "134", text: " ( થાંબલો જોખમકારક પરિસ્થિતિમાં છે  )  Pole is in Dangerous Condition" },
-                { value: "135", text: " ( નકામી સ્ટ્રીટ લાઈટ દુર કરવા બાબત  )  Removable of Unserviceable Street Light" },
-                { value: "136", text: " ( સોડીયમ લાઈટ ચાલતી નથી  )  Sodium Light Not Working" },
-                { value: "137", text: " ( સ્ટ્રીટ લાઈટ ના થાંબલા ઉપર સ્પાર્કીંગ   )  Sparking on Street Light Pole" },
-                { value: "138", text: " ( લાઈટ ચાલુ / બંધ ના સમયની સમસ્યા  )  Switching ON/OFF Time Problem" },
-                { value: "139", text: " ( ટ્યુબ લાઈટ ચાલતી નથી  )  Tube Light Not Working" },
-                { value: "106", text: " ( અન્ય  )  Other" }
+                { value: "Area Street Light Not Working", text: " ( વિસ્તારમાં સ્ટ્રીટ લાઈટ ચાલતી નથી  )  Area Street Light Not Working" },
+                { value: "Electric Shock/Current Leakage on Pole", text: " ( થાંબલા પર ઈલેક્ટ્રીક શોક / હાલના થાંબલા પર લિકેજ )  Electric Shock/Current Leakage on Pole" },
+                { value: " Insufficient Lighting", text: " ( અપૂરતો પ્રકાશ  )  Insufficient Lighting" },
+                { value: "LED Light Not Working", text: " ( LED લાઈટ ચાલતી નથી  )  LED Light Not Working" },
+                { value: "Overhead Line Problem", text: " ( ઓવરહેડ લાઈન સમસ્યા  )  Overhead Line Problem" },
+                { value: "Pole is in Dangerous Condition", text: " ( થાંબલો જોખમકારક પરિસ્થિતિમાં છે  )  Pole is in Dangerous Condition" },
+                { value: "Removable of Unserviceable Street Light", text: " ( નકામી સ્ટ્રીટ લાઈટ દુર કરવા બાબત  )  Removable of Unserviceable Street Light" },
+                { value: "Sodium Light Not Working", text: " ( સોડીયમ લાઈટ ચાલતી નથી  )  Sodium Light Not Working" },
+                { value: " Sparking on Street Light Pole", text: " ( સ્ટ્રીટ લાઈટ ના થાંબલા ઉપર સ્પાર્કીંગ   )  Sparking on Street Light Pole" },
+                { value: " Switching ON/OFF Time Problem", text: " ( લાઈટ ચાલુ / બંધ ના સમયની સમસ્યા  )  Switching ON/OFF Time Problem" },
+                { value: " Tube Light Not Working", text: " ( ટ્યુબ લાઈટ ચાલતી નથી  )  Tube Light Not Working" },
+                { value: "Other", text: " ( અન્ય  )  Other" }
             ]
         };
 

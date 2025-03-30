@@ -6,6 +6,9 @@
     <title>Dang Civic Connect - Digital Grievance Portal</title>
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <!-- Chart.js library -->
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <style>
         :root {
             --primary: #4f46e5;
@@ -171,7 +174,20 @@
             padding: 30px;
             border-radius: 20px;
         }
-
+        #complaintChart {
+            max-width: 400px;
+            max-height: 400px;
+            margin: auto;
+        }
+        h3 {
+        font-size: 22px;
+        font-weight: bold;
+        color: #ff6600;
+        text-transform: uppercase;
+        letter-spacing: 1.5px;
+        text-shadow: 1px 1px 5px rgba(0, 0, 0, 0.2);
+        margin-bottom: 15px;
+    }
         .form-heading {
             font-size: 24px;
             color: var(--dark);
@@ -462,6 +478,7 @@
             background: linear-gradient(90deg, rgba(255,255,255,0) 0%, rgba(255,255,255,0.2) 50%, rgba(255,255,255,0) 100%);
             animation: shimmer 2s infinite;
         }
+        .modal { pointer-events: auto !important; }
 
         @keyframes shimmer {
             to { left: 100%; }
@@ -504,17 +521,100 @@
             scrollbar-width: none; /* Hide scrollbar for Firefox */
             -ms-overflow-style: none; /* Hide scrollbar for IE/Edge */
 }
+/* Profile Section Styles */
+.profile-content {
+    background: #f8f9fa;
+    padding: 30px;
+    border-radius: 15px;
+    box-shadow: 0 5px 15px rgba(0,0,0,0.05);
+}
 
+.profile-content input[readonly] {
+    background-color: #f1f3f5;
+    border: 1px solid #dee2e6;
+}
+
+.profile-content input:not([readonly]) {
+    background-color: white;
+    border: 1px solid #ced4da;
+}
+
+.btn {
+    padding: 10px 20px;
+    border-radius: 8px;
+    font-weight: 500;
+    cursor: pointer;
+    transition: all 0.3s ease;
+}
+
+.btn-primary {
+    background: linear-gradient(135deg, var(--primary), var(--secondary));
+    color: white;
+    border: none;
+}
+
+.btn-primary:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 5px 15px rgba(99, 102, 241, 0.3);
+}
+
+.btn-secondary {
+    background: #6c757d;
+    color: white;
+    border: none;
+}
+
+.btn-secondary:hover {
+    background: #5a6268;
+    transform: translateY(-2px);
+}
 /* Hide scrollbar for Chrome/Safari */
 .content-area::-webkit-scrollbar {
     display: none;
+}
+/* Add to your existing styles */
+.modal {
+  pointer-events: all !important;
+}
+.modal-content {
+  pointer-events: all !important;
+}
+.modal input, 
+.modal textarea, 
+.modal select {
+  pointer-events: all !important;
+}
+.modal {
+    z-index: 1050 !important;  /* Default Bootstrap z-index */
+}
+
+.modal-backdrop {
+    z-index: 1040 !important; /* Make sure backdrop stays below */
+}
+/* Nuclear option to ensure interactivity */
+#feedbackModal, 
+#feedbackModal * {
+  pointer-events: auto !important;
+  user-select: text !important;
+  -webkit-user-select: text !important;
+}
+
+/* Remove any potential overlays */
+body.modal-open {
+  overflow: auto !important;
+  position: static !important;
+}
+
+/* Ensure modal is on top */
+#feedbackModal {
+  z-index: 99999 !important;
 }
     </style>
 </head>
 <body>
     <div class="video-background">
         <video autoplay muted loop id="bg-video">
-            <source src="\Hack2\9667569-hd_1920_1080_25fps.mp4" type="video/mp4">
+            <source src="./9667569-hd_1920_1080_25fps.mp4" type="video/mp4">
         </video>
     </div>
     <div class="container">
@@ -533,35 +633,83 @@
                     </div>
                 </div>
             </div>
-
-            <!-- Statistics Section -->
-            <div id="statistics" class="hidden">
-                <h2>Complaint Statistics</h2>
-                <div id="stats-content">
-                    <div class="stats-grid">
-                        <div class="stat-card">
-                            <div class="stat-icon"><i class="fas fa-inbox"></i></div>
-                            <div class="stat-number" id="totalComplaints">0</div>
-                            <p>Total Requests</p>
-                        </div>
-                        <div class="stat-card">
-                            <div class="stat-icon"><i class="fas fa-check-circle"></i></div>
-                            <div class="stat-number" id="resolvedComplaints">0</div>
-                            <p>Resolved Cases</p>
-                        </div>
-                        <div class="stat-card">
-                            <div class="stat-icon"><i class="fas fa-clock"></i></div>
-                            <div class="stat-number" id="pendingComplaintsCount">0</div>
-                            <p>Active Cases</p>
-                        </div>
-                    </div>
+            <!-- view profile -->
+             <!-- Add this inside the profile section div (replace the existing placeholder) -->
+<div id="profile" class="hidden">
+    <h2>Your Profile</h2>
+    <div class="profile-content">
+        <form id="profileForm">
+            <div class="two-col">
+                <div class="form-group">
+                    <label>Full Name</label>
+                    <input type="text" id="profileName" name="name" readonly>
+                </div>
+                <div class="form-group">
+                    <label>Phone Number</label>
+                    <input type="text" id="profilePhone" name="phonenumber" readonly>
                 </div>
             </div>
-
+            <div class="one-col">
+                <div class="form-group">
+                    <label>Taluka</label>
+                    <input type="text" id="profileTaluka" name="taluka" readonly>
+                </div>
+            </div>
+            <div class="one-col">
+                <div class="form-group">
+                    <label>City/Village</label>
+                    <input type="text" id="profilePlace" name="place" readonly>
+                </div>
+            </div>
+            <div class="form-group">
+            <!-- Update the password section in your profile form -->
+<div class="form-group">
+    <label>Change Password</label>
+    <div id="passwordChangeSection">
+        <button type="button" id="initiatePasswordChange" class="btn btn-outline-primary" style="margin-bottom: 10px;">
+            <i class="fas fa-lock"></i> Change Password
+        </button>
+        <div id="passwordChangeForm" style="display: none;">
+            <div class="form-group">
+                <label for="oldPassword">Current Password</label>
+                <input type="password" id="oldPassword" class="form-control" placeholder="Enter your current password">
+                <small id="oldPasswordError" class="text-danger" style="display: none;"></small>
+            </div>
+            <div class="form-group" id="newPasswordFields" style="display: none;">
+                <label for="newPassword">New Password</label>
+                <input type="password" id="newPassword" class="form-control" placeholder="Enter new password">
+                <label for="confirmPassword" style="margin-top: 10px;">Confirm New Password</label>
+                <input type="password" id="confirmPassword" class="form-control" placeholder="Confirm new password">
+                <small id="passwordMatchError" class="text-danger" style="display: none;">Passwords don't match</small>
+                <div class="password-strength" style="margin-top: 10px;">
+                    <div class="progress" style="height: 5px;">
+                        <div id="passwordStrength" class="progress-bar" role="progressbar" style="width: 0%"></div>
+                    </div>
+                    <small class="text-muted">Password strength: <span id="strengthText">Weak</span></small>
+                </div>
+            </div>
+            <div class="form-actions" style="margin-top: 15px;">
+                <button type="button" id="cancelPasswordChange" class="btn btn-secondary" style="margin-right: 10px;">Cancel</button>
+                <button type="button" id="saveNewPassword" class="btn btn-primary" disabled>Save New Password</button>
+            </div>
+        </div>
+    </div>
+</div>
+            </div>
+            <div class="form-actions" style="display: none; margin-top: 20px;">
+                <button type="button" id="cancelEdit" class="btn btn-secondary" style="margin-right: 10px;">Cancel</button>
+                <button type="submit" id="saveProfile" class="btn btn-primary">Save Changes</button>
+            </div>
+        </form>
+        <button type="button" id="editProfile" class="btn btn-primary" style="margin-top: 20px;">
+            <i class="fas fa-edit"></i> Edit Profile
+        </button>
+    </div>
+</div>
             <!-- Complaint Section -->
             <div id="complaint" class="hidden">
                 <div class="form-heading">File New Complaint</div>
-                <form id="complaintForm" action="/dashboard" method="POST" enctype="multipart/form-data">
+                <form id="complaintForm" enctype="multipart/form-data" action="/uploadsom" method="POST">
                     <fieldset>
                         <legend>Personal Information</legend>
                         <div class="two-col">
@@ -571,7 +719,7 @@
                             </div>
                             <div class="form-group">
                                 <label>Mobile Number <span class="required-star">*</span></label>
-                                <input type="tel" id="mobile" name="mobile" maxlength="13" minlength="13" pattern="\d{13}" placeholder="+919876543210" required>
+                                <input type="text" id="mobile" name="mobile"  placeholder="+919876543210" required>
                             </div>
                         </div>
                         <div class="two-col">
@@ -655,18 +803,28 @@
                             </div>
                             <div class="form-group">
                                 <label>Complaint Type <span class="required-star">*</span></label>
-                                <select id="complaintType" name="complaintType" required>
+                                <select id="complaintType" name="complaintType">
                                     <option value="">Select Type</option>
                                 </select>
                             </div>
                         </div>
+                        <!-- In your form section -->
                         <div class="form-group">
-                            <label>Problem Description <span class="required-star">*</span></label>
-                            <textarea id="description" rows="5" name="problemDesc"  required></textarea>
-                        </div>
+                            <label>Problem Description <span class="required-star">*</span>
+                            </label>
+                            <textarea id="description" rows="5" name="problemDesc"></textarea>
+                            <label>Record Audio:</label>
+                            <button type="button" id="startRecording">Start Recording</button>
+                            <button type="button" id="stopRecording" disabled>Stop Recording</button>
+    
+                            <audio id="audioPlayback" controls></audio>
+    
+                            <input type="file" name="audio" id="audio" accept="audio/*" hidden>
+
+                            </div>
                         <div>
                             <label for="imageUpload">Upload a Picture:</label>
-                            <input type="file" id="imageUpload" name="image" accept="image/*" required> 
+                            <input type="file" id="image" name="image" accept="image/*"> 
                         </div>
                         <button type="submit" id="submit-button">Submit Complaint</button>
                     </fieldset>
@@ -676,7 +834,11 @@
                     <div id="pendingComplaints"></div>
                 </div>
             </div>
-
+            <div class="hidden" id="statistics">
+                <h2>Complaint Resolution Status</h2>
+                <h3>1. Ahwa Taluka</h3>
+                <canvas id="complaintChart"></canvas>
+            </div>
             <!-- Status Section -->
             <div id="status" class="hidden">
                 <h2>Your Complaint Status</h2>
@@ -691,7 +853,6 @@
                 </div>
             </div>
         </div>
-
         <div class="nav-column">
             <div class="nav-column-inner"> <!-- Add this wrapper -->
                 <button class="nav-button active-section" id="newsButton">
@@ -703,19 +864,163 @@
                 <button class="nav-button" id="complaintButton">
                     <i class="fas fa-edit"></i> File Complaint
                 </button>
-                <button class="nav-button" id="statusButton">
+                <button class="nav-button" id="statusButton" onclick="updatePendingComplaints()">
                     <i class="fas fa-search"></i> Check Status
                 </button>
                 <button class="nav-button" id="profileButton">
                     <i class="fas fa-user"></i> Your Profile
                 </button>
-            </div>
-            
-        </div>
     </div>
-
+    <div id="feedbackModal" style="
+  display: none;
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: rgba(0,0,0,0.5);
+  z-index: 9999;
+">
+  <div style="
+    background: white;
+    width: 90%;
+    max-width: 500px;
+    margin: 30px auto;
+    padding: 20px;
+    border-radius: 8px;
+    box-sizing: border-box;
+  ">
+    <!-- Header -->
+    <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 15px; border-bottom: 1px solid #eee; padding-bottom: 10px;">
+      <h3 style="margin: 0; font-size: 1.25rem; font-weight: 600;">Submit Your Feedback</h3>
+      <button id="modalCloseBtn" style="background: none; border: none; font-size: 1.5rem; cursor: pointer; line-height: 1; padding: 0;">&times;</button>
+    </div>
+    
+    <!-- Complaint ID -->
+    <p style="margin-bottom: 15px;"><strong>Complaint ID:</strong> <span id="complaintIDDisplay" style="font-weight: bold;"></span></p>
+    
+    <!-- Feedback Form -->
+    <form id="feedbackForm">
+      <!-- Satisfaction Options -->
+      <div style="margin-bottom: 15px;">
+        <label style="display: block; margin-bottom: 10px; font-weight: 500;">How satisfied are you with the resolution?</label>
+        
+        <div style="margin-left: 5px;">
+          <div style="display: flex; align-items: center; margin-bottom: 8px;">
+            <input type="radio" id="outstanding" name="satisfaction" value="Outstanding Service" style="margin-right: 10px; width: 16px; height: 16px; flex-shrink: 0;">
+            <label for="outstanding">🌟 Outstanding Service</label>
+          </div>
+          
+          <div style="display: flex; align-items: center; margin-bottom: 8px;">
+            <input type="radio" id="satisfactory" name="satisfaction" value="Satisfactory" style="margin-right: 10px; width: 16px; height: 16px; flex-shrink: 0;">
+            <label for="satisfactory">✅ Satisfactory</label>
+          </div>
+          
+          <div style="display: flex; align-items: center; margin-bottom: 8px;">
+            <input type="radio" id="better" name="satisfaction" value="Could Be Better" style="margin-right: 10px; width: 16px; height: 16px; flex-shrink: 0;">
+            <label for="better">⚡ Could Be Better</label>
+          </div>
+          
+          <div style="display: flex; align-items: center; margin-bottom: 8px;">
+            <input type="radio" id="improve" name="satisfaction" value="Needs Improvement" style="margin-right: 10px; width: 16px; height: 16px; flex-shrink: 0;">
+            <label for="improve">❌ Needs Improvement</label>
+          </div>
+          
+          <div style="display: flex; align-items: center; margin-bottom: 8px;">
+            <input type="radio" id="unacceptable" name="satisfaction" value="Not Acceptable" style="margin-right: 10px; width: 16px; height: 16px; flex-shrink: 0;">
+            <label for="unacceptable">🚨 Not Acceptable</label>
+          </div>
+        </div>
+      </div>
+      
+      <!-- Comments -->
+      <div style="margin-bottom: 20px;">
+        <label for="additionalFeedback" style="display: block; margin-bottom: 8px; font-weight: 500;">Additional Comments (Optional)</label>
+        <textarea id="additionalFeedback" style="width: 100%; padding: 8px; border: 1px solid #ddd; border-radius: 4px; min-height: 80px; box-sizing: border-box;"></textarea>
+      </div>
+      
+      <!-- Buttons - Improved alignment -->
+      <div style="display: flex; gap: 10px; justify-content: flex-end;">
+        <button id="cancelBtn" type="button" style="
+          flex: 1;
+          max-width: 120px;
+          padding: 8px 0;
+          background: #6c757d;
+          color: white;
+          border: none;
+          border-radius: 4px;
+          cursor: pointer;
+          font-size: 0.9rem;
+          line-height: 1.5;
+          box-sizing: border-box;
+          margin: 0;
+        ">
+          Cancel
+        </button>
+        <button id="submitBtn" type="submit" style="
+          flex: 1;
+          max-width: 120px;
+          padding: 8px 0;
+          background: #0d6efd;
+          color: white;
+          border: none;
+          border-radius: 4px;
+          cursor: pointer;
+          font-size: 0.9rem;
+          line-height: 1.5;
+          box-sizing: border-box;
+          margin: 0;
+        ">
+          Submit
+        </button>
+        <p id="successMessage" style="color: green; display: none;">Feedback submitted successfully!</p>
+      </div>
+    </form>
+  </div>
+</div>
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+  
+      
     <script>
-        // Define complaint types data
+        let mediaRecorder;
+    let audioChunks = [];
+
+    document.getElementById("startRecording").addEventListener("click", async () => {
+        const stream = await navigator.mediaDevices.getUserMedia({ audio: true });
+        mediaRecorder = new MediaRecorder(stream);
+        
+        mediaRecorder.ondataavailable = event => {
+            audioChunks.push(event.data);
+        };
+
+        mediaRecorder.onstop = () => {
+            const audioBlob = new Blob(audioChunks, { type: "audio/wav" });
+            const audioUrl = URL.createObjectURL(audioBlob);
+            document.getElementById("audioPlayback").src = audioUrl;
+
+            // Convert Blob to File
+            const audioFile = new File([audioBlob], "recorded_audio.wav", { type: "audio/wav" });
+            const fileInput = document.getElementById("audio");
+
+            // Create DataTransfer to simulate file input
+            const dataTransfer = new DataTransfer();
+            dataTransfer.items.add(audioFile);
+            fileInput.files = dataTransfer.files;
+        };
+
+        mediaRecorder.start();
+        audioChunks = [];
+        document.getElementById("startRecording").disabled = true;
+        document.getElementById("stopRecording").disabled = false;
+    });
+    // $('.modal').modal('hide'); // Close any other open modals
+// $('#feedbackModal').modal('show'); // Show the feedback modal
+
+    document.getElementById("stopRecording").addEventListener("click", () => {
+        mediaRecorder.stop();
+        document.getElementById("startRecording").disabled = false;
+        document.getElementById("stopRecording").disabled = true;
+    });
         const locations = {
             Ahwa: [
                 'Ahwa', 'Baripada', 'Bhavandagad', 'Borkhal', 'Chankhal', 'Chaukiya', 'Chinchli', 'Dhavalidod', 
@@ -738,7 +1043,7 @@
         };
 
         const complaintTypes = {
-            "2": [
+            "Water Supply": [
                 { value: " Contaminated Water (Impure)", text: " ( અશુદ્ધ, ક્ન્ટામિનેટેડ પાણી  )  Contaminated Water (Impure)" },
                 { value: " Direct Motor Running", text: " ( ડાયરેક્ટ મોટર ચલાવવી )  Direct Motor Running" },
                 { value: "Illegal Connection", text: " ( ગેરકાયદેસર જોડાણ )  Illegal Connection" },
@@ -755,7 +1060,7 @@
                 { value: "Water Supply Not Received", text: " ( પાણી પુરવઠો મળ્યો નથી  )  Water Supply Not Received" },
                 { value: "Other", text: " ( અન્ય )  Other" }
             ],
-            "38": [
+            "Traffic Signal": [
                 { value: "Advertise Related Issue", text: " ( જાહેરાત અંગે સમસ્યા )  Advertise Related Issue" },
                 { value: "  Display Board Not Working", text: " ( ડિસ્પ્લે બોર્ડ નથી ચાલતું )  Display Board Not Working" },
                 { value: "Mal Function", text: " ( સમાન સંકેત (માલ ફંક્શન) )  Mal Function" },
@@ -765,7 +1070,7 @@
                 { value: "Signal Timing Improper", text: " ( સિગ્નલ ટાઈમ અયોગ્ય )  Signal Timing Improper" },
                 { value: "Other", text: " ( અન્ય  )  Other" }
             ],
-            "39": [
+            "Swimming Pool": [
                 { value: " Cleanliness Issue", text: " ( સ્વચ્છતાની સમસ્યા )  Cleanliness Issue" },
                 { value: "High Chlorine", text: " ( વધુ ક્લોરીન )  High Chlorine" },
                 { value: "Not Taking Care of Hygiene", text: " ( સ્વચ્છતાની કાળજી રાખતા નથી )  Not Taking Care of Hygiene" },
@@ -775,7 +1080,7 @@
                 { value: "Water Not Cleaned", text: " ( પાણીની સફાઈ થયેલ નથી )  Water Not Cleaned" },
                 { value: "Other", text: " ( અન્ય )  Other" }
             ],
-            "4": [
+            "Street Light": [
                 { value: "Area Street Light Not Working", text: " ( વિસ્તારમાં સ્ટ્રીટ લાઈટ ચાલતી નથી  )  Area Street Light Not Working" },
                 { value: "Electric Shock/Current Leakage on Pole", text: " ( થાંબલા પર ઈલેક્ટ્રીક શોક / હાલના થાંબલા પર લિકેજ )  Electric Shock/Current Leakage on Pole" },
                 { value: " Insufficient Lighting", text: " ( અપૂરતો પ્રકાશ  )  Insufficient Lighting" },
@@ -790,130 +1095,301 @@
                 { value: "Other", text: " ( અન્ય  )  Other" }
             ]
         };
-
-        // Initialize the application when DOM is loaded
-        document.addEventListener('DOMContentLoaded', function() {
-            // Initialize data
-            if (!localStorage.getItem('complaints')) {
-                localStorage.setItem('complaints', JSON.stringify([{
-                    id: Date.now(),
-                    name: "John Doe",
-                    mobile: "1234567890",
-                    taluka: "Ahwa",
-                    locationType: "village",
-                    villageCity: "Ahwa",
-                    address: "Main Road",
-                    pincode: "394710",
-                    problemLocation: "Public Road",
-                    description: "Potholes on main road",
-                    status: "pending",
-                    date: new Date().toLocaleString()
-                }]));
-            }
-
-            // Set up navigation buttons
-            document.getElementById('newsButton').addEventListener('click', function() {
-                showSection('news');
-            });
-            
-            document.getElementById('statisticsButton').addEventListener('click', function() {
-                showSection('statistics');
-            });
-            
-            document.getElementById('complaintButton').addEventListener('click', function() {
-                showSection('complaint');
-            });
-            
-            document.getElementById('statusButton').addEventListener('click', function() {
-                showSection('status');
-            });
-            
-            document.getElementById('profileButton').addEventListener('click', function() {
-                showSection('profile');
-            });
-
-            // Set up form event listeners
-            document.getElementById('taluka').addEventListener('change', updateVillageCityOptions);
-            document.getElementById('locationType').addEventListener('change', updateVillageCityOptions);
-            document.getElementById('complaintCategory').addEventListener('change', updateComplaintType);
-            
-            // Set up form submission
-            document.getElementById('complaintForm').addEventListener('submit', function(event) {
-                submitComplaint(event);
-            });
-
-            // Initialize the app
-            showSection('news');
-            updatePendingComplaints();
-            updateStatistics();
-        });
-
-        // Function to show a specific section
-        function showSection(sectionId) {
-            // Remove active class from all buttons
-            document.querySelectorAll('.nav-button').forEach(function(btn) {
-                btn.classList.remove('active-section');
-            });
-            
-            // Hide all sections
-            document.querySelectorAll('#mainContent > div').forEach(function(section) {
-                section.classList.add('hidden');
-            });
-            
-            // Activate the correct button based on section ID
-            let activeBtn;
-            switch(sectionId) {
-                case 'news':
-                    activeBtn = document.getElementById('newsButton');
-                    break;
-                case 'statistics':
-                    activeBtn = document.getElementById('statisticsButton');
-                    break;
-                case 'complaint':
-                    activeBtn = document.getElementById('complaintButton');
-                    break;
-                case 'status':
-                    activeBtn = document.getElementById('statusButton');
-                    break;
-                case 'profile':
-                    activeBtn = document.getElementById('profileButton');
-                    break;
-            }
-            
-            if (activeBtn) {
-                activeBtn.classList.add('active-section');
-            }
-            
-            // Show the selected section
-            const activeSection = document.getElementById(sectionId);
-            if (activeSection) {
-                activeSection.classList.remove('hidden');
-            }
-            
-            // If status section is shown, update its content
-            if (sectionId === 'status') {
-                showStatus();
-            }
+        let phoneNumber = sessionStorage.getItem('citizenMobile');
+ // Function to display status information
+ 
+async function updatePendingComplaints() {
+    console.log("updatePendingComplaints called");
+    try {
+        const mobile = sessionStorage.getItem("citizenMobile");
+        if (!mobile) {
+            console.error("No mobile number found in sessionStorage.");
+            const errorMsg = '<p class="text-danger">Please log in first.</p>';
+            document.getElementById('pendingComplaints').innerHTML = errorMsg;
+            document.getElementById('allComplaints').innerHTML = errorMsg;
+            return;
+        }
+        
+        console.log("Fetching complaints for mobile:", mobile);
+        const response = await fetch(`/omcitizen?mobile=${mobile}`);
+        
+        if (!response.ok) {
+            throw new Error(`Failed to fetch complaints. Status: ${response.status}`);
         }
 
-        // Function to display status information
-        function showStatus() {
-            const allComplaintsDiv = document.getElementById('allComplaints');
-            const complaints = JSON.parse(localStorage.getItem('complaints')) || [];
+        const complaints = await response.json();
+        console.log("Complaints data received:", complaints);
+
+        if (!complaints || !Array.isArray(complaints)) {
+            throw new Error("Invalid complaints data format");
+        }
+
+        // Create HTML content for complaints
+        const htmlContent = complaints.length ? complaints.map(complaint => {
+            // Create status badge with appropriate class
+            const statusClass = complaint.ostatus ? 
+                complaint.ostatus.toLowerCase().replace(' ', '-') : 'pending';
+            if(complaint.ostatus === 'Resolved')
+            {
+                setTimeout(() => {
+                    sessionStorage.setItem('status',complaint.complaintid)
+                    showFeedbackModal(complaint.complaintid);
+                    // Mark this feedback as shown to prevent duplicates
+                    sessionStorage.setItem(`feedbackShown_${complaint.complaintid}`, 'true');
+                }, 500);
             
-            allComplaintsDiv.innerHTML = complaints.map(complaint => `
-                <div class="status-item">
-                    <h4>${complaint.taluka} - ${complaint.villageCity}</h4>
-                    <div class="status-details">
-                        <p><strong>Issue:</strong> ${complaint.description}</p>
-                        <p><strong>Filed On:</strong> ${complaint.date}</p>
-                        <p class="status-tag"><span class="status-badge ${complaint.status}">${complaint.status}</span></p>
-                        ${complaint.status === 'resolved' ? `
-                        <p><strong>Resolved On:</strong> ${complaint.resolvedDate || 'N/A'}</p>` : ''}
+            }
+            
+            return `
+                <div class="complaint-card mb-3">
+                    <div class="complaint-header">
+                        <strong>Complaint ID:</strong> ${complaint.complaintid || 'N/A'}
+                    </div>
+                    <div class="complaint-body">
+                        <p><strong>Department:</strong> ${complaint.department || 'N/A'}</p>
+                        <p><strong>Description:</strong> ${complaint.complaintdesc || 'N/A'}</p>
+                        <p><strong>Status:</strong> <span class="status-badge ${statusClass}">${complaint.ostatus || 'Pending'}</span></p>
+                        <p><strong>Location:</strong> ${complaint.proloc || 'N/A'}</p>
+                        ${complaint.image_url ? `<p><strong>Image:</strong> <a href="${complaint.image_url}" target="_blank">View</a></p>` : ''}
+                    </div>
+                    <div class="complaint-footer">
+                        <small class="text-muted">Submitted on: ${complaint.created_at || 'Date not available'}</small>
                     </div>
                 </div>
-            `).join('');
+            `;
+        }).join('') : '<div class="alert alert-info">No complaints found for your account.</div>';
+
+        console.log("Generated HTML content:", htmlContent);
+        
+        // Update both sections with the same content
+        document.getElementById('pendingComplaints').innerHTML = htmlContent;
+        document.getElementById('allComplaints').innerHTML = htmlContent;
+
+        // Show feedback modal for resolved complaints
+        complaints.forEach(complaint => {
+            if(complaint.ostatus === 'Resolved' && !sessionStorage.getItem(`feedbackShown_${complaint.complaintid}`)) {
+                setTimeout(() => {
+                    showFeedbackModal(complaint.complaintid);
+                    sessionStorage.setItem(`feedbackShown_${complaint.complaintid}`, 'true');
+                }, 500);
+            }
+        });
+
+    } catch (error) {
+        console.error('Error in updatePendingComplaints:', error);
+        const errorMsg = `<div class="alert alert-danger">Error loading complaints: ${error.message}</div>`;
+        document.getElementById('pendingComplaints').innerHTML = errorMsg;
+        document.getElementById('allComplaints').innerHTML = errorMsg;
+    }
+}
+document.getElementById("feedbackForm").addEventListener("submit", async function (event) {
+  event.preventDefault(); // Prevent page reload
+
+  // Get Complaint ID
+  const complaintID = sessionStorage.getItem('status');
+
+  // Get selected satisfaction rating
+  const satisfaction = document.querySelector('input[name="satisfaction"]:checked');
+  if (!satisfaction) {
+    alert("Please select a satisfaction level.");
+    return;
+  }
+
+  // Get additional feedback
+  const additionalFeedback = document.getElementById("additionalFeedback").value;
+
+  // Prepare data to send
+  const feedbackData = {
+    complaintID: complaintID,
+    satisfaction: satisfaction.value,
+    additionalFeedback: additionalFeedback.trim(),
+  };
+
+  try {
+    // Send feedback to backend
+    const response = await fetch("/feedback", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify(feedbackData),
+    });
+
+    // Check response
+    const result = await response.json();
+    if (response.ok) {
+      document.getElementById("successMessage").style.display = "block";
+      console.log("Feedback submitted:", result);
+    } else {
+      alert("Failed to submit feedback. Please try again.");
+    }
+  } catch (error) {
+    console.error("Error:", error);
+    alert("Error submitting feedback.");
+  }
+});
+
+// Update the showSection function to handle status section
+function showSection(sectionId) {
+    // Remove active class from all buttons
+    document.querySelectorAll('.nav-button').forEach(function(btn) {
+        btn.classList.remove('active-section');
+    });
+    
+    // Hide all sections
+    document.querySelectorAll('#mainContent > div').forEach(function(section) {
+        section.classList.add('hidden');
+    });
+    
+    // Activate the correct button
+    const activeBtn = document.getElementById(`${sectionId}Button`);
+    if (activeBtn) {
+        activeBtn.classList.add('active-section');
+    }
+    
+    // Show the selected section
+    const activeSection = document.getElementById(sectionId);
+    if (activeSection) {
+        activeSection.classList.remove('hidden');
+    }
+    
+    // Special handling for status section
+    if (sectionId === 'status') {
+        updatePendingComplaints(); // Refresh complaints when status section is shown
+    }
+    
+    // Special handling for statistics section
+    if (sectionId === 'statistics') {
+        setTimeout(updateStatistics, 10);
+    }
+}
+
+// Update event listeners
+document.addEventListener('DOMContentLoaded', function() {
+    // Navigation buttons
+    document.getElementById('newsButton').addEventListener('click', () => showSection('news'));
+    document.getElementById('statisticsButton').addEventListener('click', () => showSection('statistics'));
+    document.getElementById('complaintButton').addEventListener('click', () => showSection('complaint'));
+    document.getElementById('statusButton').addEventListener('click', () => showSection('status'));
+    document.getElementById('profileButton').addEventListener('click', () => showSection('profile'));
+
+    // Form event listeners
+    document.getElementById('taluka').addEventListener('change', updateVillageCityOptions);
+    document.getElementById('locationType').addEventListener('change', updateVillageCityOptions);
+    document.getElementById('complaintCategory').addEventListener('change', updateComplaintType);
+
+    // Initialize the app
+    showSection('news');
+    updatePendingComplaints(); // Load complaints on initial page load
+});
+document.addEventListener("DOMContentLoaded", async function () {
+    const mobile = sessionStorage.getItem("citizenMobile");
+
+    if (!mobile) {
+        console.error("No mobile number found in sessionStorage.");
+        return;
+    }
+
+    console.log("Mobile found in sessionStorage:", mobile);
+    await autoFill(mobile);
+});
+async function autoFill(mobile) {
+    // const mobile = document.getElementById("mobileInput").value.trim();
+
+    // Debugging log
+    console.log("Mobile number before request:", mobile);
+
+    if (!mobile) {
+        console.error("❌ Mobile number is missing!");
+        alert("Please enter a valid mobile number.");
+        return;
+    }
+
+    try {
+        const citizen = await fetch(`/autofill?mobile=${encodeURIComponent(mobile)}`);
+        console.log("Response URL:", `/autofill?mobile=${encodeURIComponent(mobile)}`);
+        console.log("Response status:", citizen.status);
+        
+
+        if (!citizen.ok) {
+            throw new Error(`Server error: ${citizen.status} - ${await citizen.text()}`);
         }
+        const data = await citizen.json();
+        
+        document.getElementById('name').value = data.nameofcitizen || "";
+        document.getElementById('mobile').value = data.phonenumber || "";
+        document.getElementById('taluka').value = data.taluka || "";
+        // document.getElementById('villageCity').value = citizen.village || "";
+        console.log("Auto-fill data:", data);
+    } catch (error) {
+        console.error("Auto-fill error:", error);
+    }
+}
+// Modal control functions
+function showFeedbackModal(complaintId) {
+  const modal = document.getElementById('feedbackModal');
+  if (!modal) return;
+  
+  document.getElementById('complaintIDDisplay').textContent = complaintId;
+  modal.style.display = 'block';
+}
+
+function hideFeedbackModal() {
+  const modal = document.getElementById('feedbackModal');
+  if (modal) {
+    modal.style.display = 'none';
+    sessionStorage.removeItem('status');
+  }
+}
+
+// Set up event listeners when DOM is loaded
+document.addEventListener('DOMContentLoaded', function() {
+  // Close button
+  const closeBtn = document.getElementById('modalCloseBtn');
+  if (closeBtn) {
+    closeBtn.addEventListener('click', hideFeedbackModal);
+  }
+  
+  // Cancel button
+  const cancelBtn = document.getElementById('cancelBtn');
+  if (cancelBtn) {
+    cancelBtn.addEventListener('click', hideFeedbackModal);
+  }
+  
+  // Form submission
+  const feedbackForm = document.getElementById('feedbackForm');
+  if (feedbackForm) {
+    feedbackForm.addEventListener('submit', function(e) {
+      e.preventDefault();
+      const satisfaction = document.querySelector('input[name="satisfaction"]:checked')?.value;
+      const comments = document.getElementById('additionalFeedback').value;
+      
+      console.log('Feedback submitted:', {
+        complaintId: document.getElementById('complaintIDDisplay').textContent,
+        satisfaction,
+        comments
+      });
+      
+      hideFeedbackModal();
+    });
+  }
+  
+  // Show modal if there's a resolved complaint
+  const resolvedId = sessionStorage.getItem('status');
+  if (resolvedId) {
+    showFeedbackModal(resolvedId);
+  }
+});
+document.getElementById('statusButton').addEventListener('click', function() {
+    showSection('status');
+    updatePendingComplaints(); // Fetch and display complaints
+});
+document.addEventListener('DOMContentLoaded', function() {
+    // Other initialization code...
+    updatePendingComplaints(); // Call this function on page load
+});
+
+        document.addEventListener("DOMContentLoaded", updatePendingComplaints);
 
         // Function to update village/city options based on selected taluka
         function updateVillageCityOptions() {
@@ -933,7 +1409,6 @@
                 });
             }
         }
-
         // Function to update complaint type options based on selected category
         function updateComplaintType() {
             const category = document.getElementById('complaintCategory').value;
@@ -952,71 +1427,8 @@
                 });
             }
         }
-
-        // Function to handle complaint submission
-        function submitComplaint(event) {
-            event.preventDefault();
-            
-            // Create complaint object from form data
-            const complaint = {
-                id: Date.now(),
-                name: document.getElementById('name').value,
-                mobile: document.getElementById('mobile').value,
-                taluka: document.getElementById('taluka').value,
-                locationType: document.getElementById('locationType').value,
-                villageCity: document.getElementById('villageCity').value,
-                address: document.getElementById('address').value,
-                pincode: document.getElementById('pincode').value,
-                problemLocation: document.getElementById('location').value,
-                complaintCategory: document.getElementById('complaintCategory').value,
-                complaintType: document.getElementById('complaintType').value,
-                description: document.getElementById('description').value,
-                status: "pending",
-                date: new Date().toLocaleString()
-            };
-
-            // Save complaint to local storage
-            const complaints = JSON.parse(localStorage.getItem('complaints')) || [];
-            complaints.push(complaint);
-            localStorage.setItem('complaints', JSON.stringify(complaints));
-    
-            // Update UI
             updatePendingComplaints();
             updateStatistics();
-            
-            // Reset form
-            event.target.reset();
-            
-            // Show success message
-            alert('Complaint submitted successfully!');
-        }
-    
-        // Function to update the list of pending complaints
-        function updatePendingComplaints() {
-            const complaints = JSON.parse(localStorage.getItem('complaints')) || [];
-            const pendingDiv = document.getElementById('pendingComplaints');
-            
-            // Filter and display only non-resolved complaints
-            pendingDiv.innerHTML = complaints
-                .filter(c => c.status !== 'resolved')
-                .map(complaint => `
-                    <div class="complaint-card">
-                        <div class="complaint-header">
-                            <h4>${complaint.taluka} - ${complaint.villageCity}</h4>
-                            <span class="status-badge ${complaint.status}">${complaint.status}</span>
-                        </div>
-                        <p class="complaint-excerpt">${complaint.description.substring(0, 60)}${complaint.description.length > 60 ? '...' : ''}</p>
-                        <div class="complaint-footer">
-                            <small>Filed: ${complaint.date}</small>
-                            <button class="action-btn" onclick="editComplaint(${complaint.id})">
-                                <i class="fas fa-edit"></i> Edit
-                            </button>
-                        </div>
-                    </div>
-                `).join('');
-        }
-    
-        // Function to edit an existing complaint
         function editComplaint(id) {
             const complaints = JSON.parse(localStorage.getItem('complaints')) || [];
             const complaint = complaints.find(c => c.id === id);
@@ -1061,17 +1473,341 @@
                 });
             }
         }
-    
-        // Function to update statistics display
-        function updateStatistics() {
-            const complaints = JSON.parse(localStorage.getItem('complaints')) || [];
-            
-            // Update counts
-            document.getElementById('totalComplaints').textContent = complaints.length;
-            const resolved = complaints.filter(c => c.status === 'resolved').length;
-            document.getElementById('resolvedComplaints').textContent = resolved;
-            document.getElementById('pendingComplaintsCount').textContent = complaints.length - resolved;
+        async function updateStatistics() {
+    try {
+        const response = await fetch('/plot-graphs');
+        const data = await response.json();
+        
+        console.log("Fetched Data:", data);
+
+        if (typeof data.resolved !== "number" || typeof data.pending !== "number") {
+            console.error("Invalid Data Structure:", data);
+            return;
         }
+
+        const ctx = document.getElementById('complaintChart').getContext('2d');
+
+        // Only destroy if it's a valid Chart instance
+        if (window.complaintChart && typeof window.complaintChart.destroy === 'function') {
+            window.complaintChart.destroy();
+        }
+
+        window.complaintChart = new Chart(ctx, {
+            type: 'pie',
+            data: {
+                labels: ['Resolved', 'Pending'],
+                datasets: [{
+                    data: [data.resolved, data.pending],
+                    backgroundColor: ['#4CAF50', '#FF5733']
+                }]
+            },
+            options: {
+                responsive: true,
+                maintainAspectRatio: false
+            }
+        });
+
+    } catch (error) {
+        console.error("Error fetching data:", error);
+    }
+}
+// Add this to your existing JavaScript
+document.addEventListener('DOMContentLoaded', function() {
+    // Load profile data when profile section is shown
+    document.getElementById('profileButton').addEventListener('click', loadProfileData);
+    
+    // Edit profile button
+    document.getElementById('editProfile').addEventListener('click', enableProfileEditing);
+    
+    // Cancel edit button
+    document.getElementById('cancelEdit').addEventListener('click', cancelProfileEditing);
+    
+    // Save profile button
+    document.getElementById('profileForm').addEventListener('submit', saveProfileChanges);
+});
+
+async function loadProfileData() {
+    try {
+        const mobile = sessionStorage.getItem('citizenMobile');
+        if (!mobile) {
+            console.error('No mobile number in session');
+            return;
+        }
+        
+        const encodedMobile = encodeURIComponent(mobile);  
+        const response = await fetch(`/getProfile?mobile=${encodedMobile}`);
+        if (!response.ok) {
+            throw new Error('Failed to fetch profile data');
+        }
+        
+        const profileData = await response.json();
+        
+        // Fill the form with profile data
+        document.getElementById('profileName').value = profileData.nameofcitizen || '';
+        document.getElementById('profilePhone').value = profileData.phonenumber || '';
+        document.getElementById('profileTaluka').value = profileData.taluka || '';
+        document.getElementById('profilePlace').value = profileData.village || '';
+        
+    } catch (error) {
+        console.error('Error loading profile:', error);
+        alert('Failed to load profile data');
+    }
+}
+
+function enableProfileEditing() {
+    // Remove readonly attribute from editable fields
+    const inputs = document.querySelectorAll('#profileForm input');
+    inputs.forEach(input => {
+        if (input.id !== 'profilePhone') { // Don't allow phone number editing
+            input.removeAttribute('readonly');
+        }
+    });
+    
+    // Show save/cancel buttons
+    document.querySelector('.form-actions').style.display = 'block';
+    
+    // Hide edit button
+    document.getElementById('editProfile').style.display = 'none';
+}
+
+function cancelProfileEditing() {
+    // Restore readonly attribute
+    const inputs = document.querySelectorAll('#profileForm input');
+    inputs.forEach(input => {
+        input.setAttribute('readonly', true);
+    });
+    
+    // Hide save/cancel buttons
+    document.querySelector('.form-actions').style.display = 'none';
+    
+    // Show edit button
+    document.getElementById('editProfile').style.display = 'block';
+    
+    // Reload original data
+    loadProfileData();
+}
+
+async function saveProfileChanges(e) {
+    e.preventDefault();
+    
+    try {
+        const formData = new FormData(document.getElementById('profileForm'));
+        const mobile = sessionStorage.getItem('citizenMobile');
+        
+        // Add mobile to form data
+        formData.append('mobile', mobile);
+        
+        const response = await fetch('/updateProfile', {
+            method: 'POST',
+            body: formData
+        });
+        
+        if (!response.ok) {
+            throw new Error('Failed to update profile');
+        }
+        
+        const result = await response.json();
+        if (result.success) {
+            alert('Profile updated successfully!');
+            cancelProfileEditing(); // Reset to read-only mode
+        } else {
+            throw new Error(result.message || 'Update failed');
+        }
+    } catch (error) {
+        console.error('Error updating profile:', error);
+        alert('Failed to update profile: ' + error.message);
+    }
+}   
+// Password change functionality
+document.addEventListener('DOMContentLoaded', function() {
+    const initiateBtn = document.getElementById('initiatePasswordChange');
+    const passwordForm = document.getElementById('passwordChangeForm');
+    const oldPasswordInput = document.getElementById('oldPassword');
+    const newPasswordFields = document.getElementById('newPasswordFields');
+    const newPasswordInput = document.getElementById('newPassword');
+    const confirmPasswordInput = document.getElementById('confirmPassword');
+    const savePasswordBtn = document.getElementById('saveNewPassword');
+    const cancelPasswordBtn = document.getElementById('cancelPasswordChange');
+    const oldPasswordError = document.getElementById('oldPasswordError');
+    const passwordMatchError = document.getElementById('passwordMatchError');
+    const passwordStrengthBar = document.getElementById('passwordStrength');
+    const strengthText = document.getElementById('strengthText');
+
+    // Toggle password change form
+    initiateBtn.addEventListener('click', function() {
+        passwordForm.style.display = 'block';
+        initiateBtn.style.display = 'none';
+    });
+
+    // Cancel password change
+    cancelPasswordBtn.addEventListener('click', function() {
+        resetPasswordForm();
+    });
+
+    // Verify old password
+    oldPasswordInput.addEventListener('blur', async function() {
+        if (oldPasswordInput.value.trim() === '') return;
+        
+        try {
+            const mobile = sessionStorage.getItem('citizenMobile');
+            const response = await fetch('/verifyPassword', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({
+                    mobile: mobile,
+                    password: oldPasswordInput.value
+                })
+            });
+
+            const result = await response.json();
+            
+            if (result.valid) {
+                oldPasswordError.style.display = 'none';
+                newPasswordFields.style.display = 'block';
+                oldPasswordInput.readOnly = true;
+            } else {
+                oldPasswordError.textContent = 'Incorrect password';
+                oldPasswordError.style.display = 'block';
+                newPasswordFields.style.display = 'none';
+            }
+        } catch (error) {
+            console.error('Error verifying password:', error);
+            oldPasswordError.textContent = 'Error verifying password';
+            oldPasswordError.style.display = 'block';
+        }
+    });
+
+    // Check password match and strength
+    newPasswordInput.addEventListener('input', checkPasswordStrength);
+    confirmPasswordInput.addEventListener('input', checkPasswordMatch);
+
+    // Save new password
+    savePasswordBtn.addEventListener('click', async function() {
+        if (!validatePasswordChange()) return;
+        
+        try {
+            const mobile = sessionStorage.getItem('citizenMobile');
+            const response = await fetch('/updatePassword', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({
+                    mobile: mobile,
+                    oldPassword: oldPasswordInput.value,
+                    newPassword: newPasswordInput.value
+                })
+            });
+
+            const result = await response.json();
+            
+            if (result.success) {
+                alert('Password changed successfully!');
+                resetPasswordForm();
+            } else {
+                alert('Failed to change password: ' + (result.message || 'Unknown error'));
+            }
+        } catch (error) {
+            console.error('Error changing password:', error);
+            alert('Failed to change password. Please try again.');
+        }
+    });
+
+    function checkPasswordStrength() {
+        const password = newPasswordInput.value;
+        let strength = 0;
+        
+        // Length check
+        if (password.length >= 8) strength++;
+        if (password.length >= 12) strength++;
+        
+        // Complexity checks
+        if (/[A-Z]/.test(password)) strength++;
+        if (/[0-9]/.test(password)) strength++;
+        if (/[^A-Za-z0-9]/.test(password)) strength++;
+        
+        // Update UI
+        const strengthPercent = Math.min(100, strength * 25);
+        passwordStrengthBar.style.width = strengthPercent + '%';
+        
+        // Update strength text and color
+        let strengthClass = 'weak';
+        let text = 'Weak';
+        
+        if (strength >= 4) {
+            strengthClass = 'moderate';
+            text = 'Moderate';
+        }
+        if (strength >= 5) {
+            strengthClass = 'strong';
+            text = 'Strong';
+        }
+        if (strength >= 6) {
+            strengthClass = 'very-strong';
+            text = 'Very Strong';
+        }
+        
+        passwordStrengthBar.className = 'progress-bar ' + strengthClass;
+        strengthText.textContent = text;
+        strengthText.className = strengthClass;
+    }
+
+    function checkPasswordMatch() {
+        if (newPasswordInput.value && confirmPasswordInput.value) {
+            if (newPasswordInput.value !== confirmPasswordInput.value) {
+                passwordMatchError.style.display = 'block';
+                savePasswordBtn.disabled = true;
+            } else {
+                passwordMatchError.style.display = 'none';
+                savePasswordBtn.disabled = false;
+            }
+        }
+    }
+
+    function validatePasswordChange() {
+        if (!oldPasswordInput.value) {
+            oldPasswordError.textContent = 'Please enter current password';
+            oldPasswordError.style.display = 'block';
+            return false;
+        }
+        
+        if (!newPasswordInput.value) {
+            alert('Please enter a new password');
+            return false;
+        }
+        
+        if (newPasswordInput.value !== confirmPasswordInput.value) {
+            passwordMatchError.style.display = 'block';
+            return false;
+        }
+        
+        // Additional password strength validation if needed
+        if (newPasswordInput.value.length < 8) {
+            alert('Password must be at least 8 characters long');
+            return false;
+        }
+        
+        return true;
+    }
+
+    function resetPasswordForm() {
+        passwordForm.style.display = 'none';
+        initiateBtn.style.display = 'block';
+        oldPasswordInput.value = '';
+        newPasswordInput.value = '';
+        confirmPasswordInput.value = '';
+        newPasswordFields.style.display = 'none';
+        oldPasswordInput.readOnly = false;
+        oldPasswordError.style.display = 'none';
+        passwordMatchError.style.display = 'none';
+        passwordStrengthBar.style.width = '0%';
+        strengthText.textContent = 'Weak';
+        savePasswordBtn.disabled = true;
+    }
+});
     </script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
 </body>
 </html>

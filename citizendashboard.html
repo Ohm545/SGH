@@ -609,6 +609,75 @@ body.modal-open {
 #feedbackModal {
   z-index: 99999 !important;
 }
+.file-upload {
+    margin-bottom: 30px;
+}
+
+.file-input-container {
+    position: relative;
+    display: flex;
+    align-items: center;
+    margin-bottom: 15px;
+}
+
+.file-upload-label {
+    display: flex;
+    align-items: center;
+    width: 100%;
+    padding: 12px 16px;
+    border: 1px dashed #ddd;
+    border-radius: 12px;
+    background-color: var(--light);
+    cursor: pointer;
+    transition: all 0.3s ease;
+}
+
+.file-upload-label:hover {
+    border-color: var(--primary);
+    background-color: rgba(79, 70, 229, 0.05);
+}
+
+#file-name {
+    flex-grow: 1;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    color: #666;
+}
+
+.browse-btn {
+    background-color: var(--primary);
+    color: white;
+    border: none;
+    padding: 8px 16px;
+    border-radius: 12px;
+    cursor: pointer;
+    font-weight: 500;
+    transition: all 0.3s ease;
+    margin-left: 10px;
+}
+
+.browse-btn:hover {
+    background-color: var(--secondary);
+}
+
+.image-preview {
+    max-width: 100%;
+    height: 200px;
+    border-radius: 12px;
+    background-color: var(--light);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    overflow: hidden;
+    margin-top: 10px;
+}
+
+.image-preview img {
+    max-width: 100%;
+    max-height: 100%;
+    object-fit: contain;
+}
     </style>
 </head>
 <body>
@@ -822,10 +891,17 @@ body.modal-open {
                             <input type="file" name="audio" id="audio" accept="audio/*" hidden>
 
                             </div>
-                        <div>
-                            <label for="imageUpload">Upload a Picture:</label>
-                            <input type="file" id="image" name="image" accept="image/*"> 
-                        </div>
+                            <div class="form-group file-upload">
+                                <label>Upload a Picture <span class="required-star">*</span></label>
+                                <div class="file-input-container">
+                                    <input type="file" id="image" name="image" accept="image/*" required hidden>
+                                    <label class="file-upload-label" for="image">
+                                        <span id="file-name">No file chosen</span>
+                                    </label>
+                                    <button type="button" class="browse-btn">Browse Files</button>
+                                </div>
+                                <div class="image-preview"></div>
+                            </div>
                         <button type="submit" id="submit-button">Submit Complaint</button>
                     </fieldset>
                 </form>
@@ -1021,6 +1097,35 @@ body.modal-open {
         document.getElementById("startRecording").disabled = false;
         document.getElementById("stopRecording").disabled = true;
     });
+    // ==== ADD IMAGE PREVIEW HANDLING BELOW ====
+const imageInput = document.getElementById('image');
+const fileNameDisplay = document.getElementById('file-name');
+const imagePreview = document.querySelector('.image-preview');
+
+// Trigger file input when browse button is clicked
+document.querySelector('.browse-btn').addEventListener('click', () => imageInput.click());
+
+// Handle file selection and preview
+imageInput.addEventListener('change', function() {
+    if (this.files && this.files[0]) {
+        const file = this.files[0];
+        fileNameDisplay.textContent = file.name;
+        
+        // Create and display image preview
+        const reader = new FileReader();
+        reader.onload = (e) => {
+            imagePreview.innerHTML = `<img src="${e.target.result}" 
+                                      alt="Preview" 
+                                      style="max-width: 100%; 
+                                             max-height: 200px;
+                                             object-fit: contain;">`;
+        };
+        reader.readAsDataURL(file);
+    } else {
+        fileNameDisplay.textContent = 'No file chosen';
+        imagePreview.innerHTML = '';
+    }
+});
         const locations = {
             Ahwa: [
                 'Ahwa', 'Baripada', 'Bhavandagad', 'Borkhal', 'Chankhal', 'Chaukiya', 'Chinchli', 'Dhavalidod', 
